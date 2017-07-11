@@ -1,0 +1,110 @@
+var express = require('express');
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+
+var TVDB = require('node-tvdb');
+var async = require('async');
+var _ = require('lodash');
+
+var Show = require('../models/shows');
+
+var Verify = require('./verify');
+
+var showRouter = express.Router();
+
+showRouter.use(bodyParser.json());
+var BASE_IMAGE_URL = "https://thetvdb.com/banners/";
+
+showRouter.route('/')
+    .get(function(req, res, next){
+        // save a reference to all the docs in Show database
+        var query = Show.find();
+        var show = [];
+        // /?genre=
+        if (req.query.genre) {
+            // find by genre and sort by rating in ascending order
+            show = query.where({genre: req.query.genre}).sort({rating: 1}); 
+        }
+        // /?alphabet= 
+        else if (req.query.alphabet) {
+            // find all shows starting with alphabet and sort by rating in ascending order
+            show = query.where({ seriesName: new RegExp('^' + '[' + req.query.alphabet + ']', 'i') }).sort({rating: 1});
+        } 
+        // if no query parameters are present
+        else {
+            // find all and sort by rating in ascending order
+            show = query.sort({rating: 1});
+        }
+        // execute the query show.find()
+        show.find().exec(function(err, shows) {
+            // if any error exist, move to the next middleware function
+            if (err) next(err);
+            // write result to the response as json
+            res.json(shows);
+        });
+    })
+
+    .post(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
+        // the tmdb api key for my account
+        var apiKey = '5BB799C77561B167';
+        var maxVal = function(arr){
+            return Math.max.apply(Math,arr.map(function(o){return o.ratingsInfo.average;}))
+        }
+        // create a new TVDB instance
+        var tvdb = new TVDB(apiKey);
+
+        var seriesImdbId = req.body.IMDB;
+
+        // get series by IMDB ID
+        tvdb.getSeriesByImdbId(seriesImdbId)
+        .then(response => {
+            // retrieve series id from the returned data
+            // and search for series data from TVDB
+            console.log(response[0].id);
+            tvdb.getSeriesAllById(response[0].id)
+            .then(response => {
+                // create new Show object
+                var show = new Show({
+                    _id: response.id,
+                    seriesName: response.seriesName,
+                    airsDayOfWeek: response.airsDayOfWeek,
+                    airsTime: response.airsTime,
+                    firstAired: response.firstAired,
+                    genre: response.genre,
+                    network: response.network,
+                    overview: response.overview,
+                    rating: response.siteRating,
+                    ratingCount: response.siteRatingCount,
+                    status: response.status,
+                    banner: BASE_IMAGE_URL + response.banner
+                });
+            
+                Show.create(show, function(err, newShow){
+                    if(err){
+                        if (err) {
+                            if (err.code == 11000) {
+                                console.log('Show already exists');
+                                return res.status(409).end('Show already exists!');
+                            }
+                            next(err);
+                        }
+                    }
+                    console.log('Show created!');
+                    var id = newShow._id;
+                });
+            })
+            .catch(error => {next(error);})
+            })
+        .catch(error => {next(error);});
+    })
+    
+
+showRouter.route('/:id')
+    .get(function(req, res, next) {
+        Show.findById(req.params.id, function(err, show) {
+            if (err) next(err);
+            res.json(show);
+        });
+    })
+
+module.exports = showRouter;

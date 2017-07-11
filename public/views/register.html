@@ -1,0 +1,53 @@
+    <div class="ngdialog-message">
+        <div class="">
+            <h3 class="text-center">Register </h3>
+            <hr/>
+        </div>
+        <div class="">&nbsp;</div>
+        <div class="">
+            <form ng-submit="doRegister()">
+                <div class="form-group col-xs-12">
+                    <label class="sr-only" for="username">Username</label>
+                    <input type="text" class="form-control input-md" id="username" placeholder="Username" ng-model="registration.username">
+                </div>
+                <div class="form-group col-xs-12">
+                    <label class="sr-only" for="email">Email</label>
+                    <input type="email" class="form-control input-md" id="email" placeholder="Email" ng-model="registration.email">
+                </div>
+                <div class="form-group col-xs-6">
+                    <label class="sr-only" for="firstname">First Name</label>
+                    <input type="text" class="form-control input-md" id="firstname" placeholder="First Name" ng-model="registration.firstname">
+                </div>
+                <div class="form-group col-xs-6">
+                    <label class="sr-only" for="lastname">Last Name</label>
+                    <input type="text" class="form-control input-md" id="lastname" placeholder="Last Name" ng-model="registration.lastname">
+                </div>
+                <div class="form-group col-xs-12">
+                    <label class="sr-only" for="password">Password</label>
+                    <input type="password" class="form-control input-md" id="password" placeholder="Password" ng-model="registration.password">
+                </div>
+                <div class="form-group col-xs-12">
+                  <div class="checkbox" >
+                      <label>
+                          <input type="checkbox" ng-model="registration.rememberMe"> Remember me
+                      </label>
+                  </div>
+                </div>
+                <div class="form-group col-xs-12">
+                  <button type="submit" class="btn btn-info btn-lg btn-block">Register</button>
+                </div>
+                <div class="form-group col-xs-12">
+                  <button type="button" class="btn btn-default btn-lg btn-block" ng-click=closeThisDialog("Cancel")>Already a Member? Sign in Here</button>
+                </div>
+                <div class="form-group col-xs-12">
+                    <button type="button" class="btn btn-block btn-lg btn-social btn-facebook">
+                        <span class="fa fa-facebook left"></span>   Register with Facebook
+                    </button>
+                </div>
+                <div class="form-group col-xs-12">
+                    <button type="button" class="btn btn-block btn-lg btn-social btn-google"><i class="fa fa-google-plus right"></i> Register with Google+</button>
+                </div>
+                &nbsp;&nbsp;
+            </form>
+        </div>
+    </div>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html ng-app="watchHoursApp">
+  <head>
+    <base href="/">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Watchours</title>
+    <link rel="icon" type="image/png" href="favicon.ico"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" rel="stylesheet" media="all">
+    <link rel="stylesheet" href="bower_components/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap-social/bootstrap-social.css">
+    <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog.min.css">
+    <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog-theme-plain.min.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="bower_components/bootstrap/bootstrap.min.js"></script>
+    <link href="stylesheets/style.css" rel="stylesheet">
+    <link href="stylesheets/carousel.css" rel="stylesheet">
+  </head>
+  <body>
+     
+    <div ui-view="header"></div>
+
+    <div ui-view="content"></div>
+    
+    <div ui-view="footer"></div>
+    
+    
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.min.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="bower_components/angular-strap/dist/angular-strap.min.js"></script>
+    <script src="bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>
+    <script src="bower_components/angular-messages/angular-messages.min.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+    <script src="bower_components/angular-route/angular-route.min.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+    <script src="bower_components/moment/min/moment.min.js"></script>
+    <script src="bower_components/ng-dialog/js/ngDialog.min.js"></script>
+    <script src="javascripts/app.js"></script>
+    <script src="javascripts/controllers.js"></script>
+    <script src="javascripts/services.js"></script>
+    <script src="javascripts/directives.js"></script>
+    <script src="javascripts/filters.js"></script>
+    <script>
+        $(document).ready(function () {
+          $(".navbar-toggle").on("click", function () {
+              $(this).toggleClass("active");
+          });
+        });
+    </script>
+  </body>
+</html>

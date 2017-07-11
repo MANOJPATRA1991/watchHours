@@ -1,0 +1,106 @@
+<div class="container-fluid showDetail">
+  <div class="jumbotron">
+    <img  ng-src="{{show.banner}}">
+  </div>
+  
+  <div class="panel panel-primary">
+    <div class="panel-body">
+      <div class="row row-content">
+        <div class="col-xs-12 col-sm-7">
+          <h2>{{show.seriesName}}</h2>
+          <hr/>
+          <p class="showP">{{show.overview}}</p>
+          <hr/>
+          <div class="showP" ng-show="nextEpisode">
+            <h3>Next Episode</h3>
+            <b>{{nextEpisode.episodeName}}</b> <b>S{{toSet(nextEpisode.season)}}E{{toSet(nextEpisode.episodeNumber)}}</b> starts {{nextEpisode.firstAired | fromNow}}.
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-3 col-sm-offset-2">
+          <div class="text-center" ng-if="currentUser">
+            <div ng-show="!isSubscribed()">
+              <button ng-click="subscribe()" class="btn btn-block btn-success">
+                <span class="glyphicon glyphicon-plus"></span> Subscribe
+              </button>
+            </div>
+            <div ng-show="isSubscribed()">
+              <button ng-click="unsubscribe()" class="btn btn-block btn-danger">
+                <span class="glyphicon glyphicon-minus"></span> Unsubscribe
+              </button>
+            </div>
+          </div>
+          <div class="text-center" ng-show="!currentUser">
+            <button class="btn btn-block btn-primary" ng-click="openLogin()">Login to Subscribe</button>
+          </div>
+          <div class="well">
+            <table class="showP">
+              <tr>
+                <td><b>{{show.seriesName}}</b></td>
+              </tr>
+              <tr>
+                <td><b>{{show.episodes.length}}</b> Episodes</td>
+              </tr>
+              <tr>
+                <td><span ng-repeat="genre in show.genre"><b>{{genre}}{{$last ? '' : ' | '}}</b></span></td>
+              </tr>
+              <tr>
+                <td>Rating: <b>{{show.rating}}</b></td>
+              </tr>
+              <tr>
+                <td><b>{{show.airsDayOfWeek}}s</b> at <b>{{show.airsTime}}</b></td>
+              </tr>
+              <tr>
+                <td>On <b>{{show.network}}</b></td>
+              </tr>
+              <tr>
+                <td>Show <b>{{show.status}}</b></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="panel-group stick">
+    <div class="panel panel-primary">
+      <div class="panel-heading" role="tab">
+        <h4 class="panel-title">
+           List of Episodes
+        </h4>
+      </div>
+      <ul class=" nav nav-tabs nav-justified">
+        <li role="presentation" ng-class="{active: $index == 0}" ng-repeat="n in range() track by $index"><a data-toggle="tab" href="#Season {{$index+1}}">Season {{$index+1}}</a></li>
+      </ul>
+    </div>
+  </div>
+
+<div class="panel-group">
+    <div class="panel panel-primary">
+      <div class="panel-body">
+          <table class="table table-bordered episodetable">
+            <tr class="episodehead">
+              <th class="showP col-xs-2" >Season</th>
+              <th class="showP col-xs-2" >Episode Number</th>
+              <th class="showP col-xs-2" >Episode Name</th>
+              <th class="showP col-xs-2" >Air Date</th>
+            </tr>
+            <tr class="detail" ng-repeat-start="episode in show.episodes | filter: filterSeason | orderBy: 'season'"  ng-attr-id="{{episode.episodeNumber == 1 ? 'Season ' + episode.season : ''}}">
+              <th class="col-xs-2">{{episode.season}}</th>
+              <td class="col-xs-2">{{episode.episodeNumber}}</td>
+              <td class="col-xs-2">{{episode.episodeName}}</td>
+              <td ng-if="episode.firstAired" class="col-xs-2">{{episode.firstAired | date: "MMM d, y"}}</td>
+              <td ng-if="!episode.firstAired" class="col-xs-2">TBA</td>
+            </tr>
+            <tr ng-repeat-end>
+              <td colspan="8">{{episode.overview}}</td>
+            </tr>
+          </table>
+        </div>
+    </div>
+</div>
+
+
+  
+    
+      

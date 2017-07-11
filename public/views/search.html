@@ -1,0 +1,63 @@
+<ol class="breadcrumb">
+  <li><a href="./home">Home</a></li>
+  <li class="active">Search</li>
+</ol>
+
+<div class="jumbotron">
+  <div class="container">
+    <ul class="alphabet">
+      <li ng-repeat="char in alphabet">
+        <span class="label label-default" ng-click="filterByAlphabet(char)">{{char}}</span>
+      </li>
+    </ul>
+    <ul class="genres">
+      <li ng-repeat="genre in genres">
+        <span class="label label-default" ng-click="filterByGenre(genre)">{{genre}}</span>
+      </li>
+      <li>
+        <span class="label label-default" ng-click="showAll()">Show All</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="form-group">
+      <input type="text" class="search form-control input-lg" aria-label="input" placeholder="Search by series name" ng-model="search.seriesName">
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      {{headingTitle}}
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-xs-6 col-md-3 modPanel" ng-repeat="show in filtered = shows  | filter: search | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
+          <div class="thumbnail">
+              <a href="/shows/{{show._id}}">
+                <img class="poster" style="height:260px;" ng-src="{{show.poster}}"/>
+              </a>
+              <a href="/shows/{{show._id}}">
+                <div class="caption">
+                  <p>{{show.seriesName}}</p>
+                  <p>Episodes: {{show.episodes.length}}</p>
+                  <p>Airs: {{show.airsDayOfWeek}}</p>
+                  <p>Airs At: {{show.airsTime}}</p>
+                  <p>Airs On: {{show.network}}</p>
+                  <p>Status: {{show.status}}</p>
+                </div>
+              </a>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center">
+      <ul uib-pagination boundary-links="true" max-size="noOfPages" total-items="totalItems" items-per-page="entryLimit" ng-model="currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+  </div>
+</div>
