@@ -1,96 +1,45 @@
-<div class="container-fluid">
-  <div class="panel panel-primary we-ll">
-        <div class="panel-heading">
-          <h3 class="panel-title">Today</h3>
-        </div>
-  </div>
-  <div class="well container-scroll">
-      <div class="row" class="scrollbar" id="style-3">
-          <span ng-repeat="show in shows | orderBy:convertTo24Hour" >
-            <span ng-repeat="episode in show.episodes">
-              <div class="block col-xs-12 col-sm-4" ng-if="showToday(episode.firstAired)">
-                 <dl class="dl-horizontal">
-                      <dt>
-                        <p>{{show.airsTime}}</p>
-                        <p>{{show.network}}</p>
-                      </dt>
-                      <dd>
-                        <p><a href="/shows/{{show._id}}">{{show.seriesName}}</a><p>
-                        <p class="eName">{{episode.episodeName}}</p>
-                        <p class="eNumber">Season {{episode.season}}, Episode {{episode.episodeNumber}}</p>
-                      </dd>
-                  </dl>
-              </div>
-            </span>
-          </span>
+<div class="container">
+  <div class="flex-row">
+    <div class="col-md-12 upcoming">
+      <div class="btn-group buttonshow" role="group">
+        <a class="btn btn-default" type="button" ui-sref="app.showsToday" ng-class="{active: stateis('app.showday')}">Now </a>
+        <a class="btn btn-default" type="button" ui-sref="app.showsTomorrow">Tomorrow </a>
+        <a class="btn btn-default" type="button" ui-sref="app.showsThisWeek">This Week </a>
       </div>
+    </div>
+    <div ui-view="showday"></div>
   </div>
 </div>
 
-<div class="container-fluid">
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h3 class="panel-title">Popular Shows Airing This Week</h3>
-        </div>
-        <div class="panel-body">
-          <div class="col-xs-12 col-md-3 modPanel" ng-repeat="show in shows.slice(((currentPage-1)*entryLimit), ((currentPage)*entryLimit))">
-            <div class="text-center" ng-if="admin">
-              <button class="btn btn-block btn-success" data-toggle="modal" data-target="#myModal">
-                <span class="glyphicon glyphicon-plus"></span> Update
-              </button>
-            </div>
-            <div class="text-center" ng-if="admin">
-              <button ng-click="deleteShow(show._id)" class="btn btn-block btn-danger">
-                <span class="glyphicon glyphicon-minus"></span> Delete
-              </button>
-            </div>
-            <div class="thumbnail">
-              <a href="/shows/{{show._id}}">
-                <img class="poster" style="height:260px;" ng-src="{{show.poster}}"/>
-              </a>
-              <a href="/shows/{{show._id}}">
-                <div class="caption">
-                  <p>{{show.seriesName}}</p>
-                  <p>Episodes: {{show.episodes.length}}</p>
-                  <p>Airs: {{show.airsDayOfWeek}}</p>
-                  <p>Airs At: {{show.airsTime}}</p>
-                  <p>Airs On: {{show.network}}</p>
-                  <p>Status: {{show.status}}</p>
-                </div>
-              </a>
-            </div>
+<div id="content" class="container">
+  <div class="flex-row">
+    <div class="col-md-12">
+      <h1>Popular Shows</h1>
+    </div>
+    <div class="col-xsl-6 col-xs-12 col-sm-6 col-md-4" ng-repeat="show in shows | limitTo: 12">
+      <div class="thumbnail">
+        <img src="{{show.poster}}" alt="{{show.seriesName}}">
+        <div class="clearfix"></div>
+        <div class="caption">
+          <p class="title">
+            <a class="title" ui-sref="app.series({seriesId: show._id})" title="{{show.seriesName}}"><b>{{show.seriesName}}</b></a>
+          </p>
+          <p class="info"><b>{{show.network}}</b> <span class="rating"><i class="fa fa-star fa-lg star" aria-hidden="true"></i>  {{show.rating}}</span></p>
+          <p class="info"><i class="fa fa-calendar" aria-hidden="true"></i>  {{show.firstAired | date: 'yyyy'}}</p>
+          <div class="cap">
+            <span ng-repeat="genre in show.genre"><b>{{genre}}</b></span>
           </div>
         </div>
       </div>
-
-    <div class="row row-content text-center">
-      <ul uib-pagination boundary-links="true" max-size="noOfPages" total-items="totalItems" items-per-page="entryLimit" ng-model="currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
-    </div> 
-</div>
-
-<!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Update Show</h4>
-      </div>
-      <div class="modal-body">
-        <div class="panel-body">
-          <form class="form" method="post"  ng-submit="updateShow(show.seriesName)" name="updateForm">
-            <label>Poster:</label> 
-            <input class="form-control" type="text" name="updateForm" ng-model="showPoster" placeholder="Enter path to new poster" required autofocus>
-            <div class="help-block text-danger" ng-if="updateForm.showName.$dirty" ng-messages="updateForm.showName.$error">
-              <div ng-message="required">Path to file required.</div>
-            </div>
-            <button class="btn btn-primary" type="submit"  ng-disabled="updateForm.$invalid">Update</button>
-          </form>
-          
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
     </div>
   </div>
+</div>
+<!--<div class="container">-->
+  <!--<div class="row">-->
+    <!--<div class="col-md-12">-->
+      <!--<h1>Today's Sneak Peeks</h1></div>-->
+    <!--<div class="col-md-4"></div>-->
+    <!--<div class="col-md-4"></div>-->
+    <!--<div class="col-md-4"></div>-->
+  <!--</div>-->
+<!--</div>-->

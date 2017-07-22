@@ -14,8 +14,17 @@ var Show = new Schema({
     ratingCount: Number,
     status: String,
     banner: String,
+    poster: String,
     subscribers: [{
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    watchList: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    favorites: [{
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }]
 });

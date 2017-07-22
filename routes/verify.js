@@ -4,8 +4,8 @@ var fs = require('fs');
 var cert = fs.readFileSync('../watchours/bin/private.key'); //get private key
 var config = require('../config.js');
 exports.getToken = function(user){
-    //sign with RSA SHA 256
-    //returns the JSONWebToken as a string
+    // sign with RSA SHA 256
+    // returns the JSONWebToken as a string
     return jwt.sign(user, cert, {
         expiresIn: 3600
         // algorithm: 'RS256'
@@ -19,7 +19,7 @@ exports.verifyOrdinaryUser = function(req, res, next){
     // decode token
     if (token) {
         // verifies secret and checks expiry
-        //Callback passed the payload decoded if the signature are valid. If not, it will be passed the error.
+        // Callback passed the payload decoded if the signature are valid. If not, it will be passed the error.
         jwt.verify(token, cert, function (err, decoded) {
             if (err) {
                 var err = new Error('You are not authenticated!');
@@ -41,7 +41,7 @@ exports.verifyOrdinaryUser = function(req, res, next){
 };
 
 exports.verifyAdmin = function(req, res, next){
-    //to access the decoded properties of the req object use req.decoded._doc
+    // to access the decoded properties of the req object use req.decoded._doc
     if(!req.decoded){
         var err = new Error('You are not authorized to perform this operation!');
         err.status = 403;

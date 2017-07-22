@@ -7,7 +7,7 @@ var async = require('async');
 var _ = require('lodash');
 
 var Show = require('../models/shows');
-
+var Episode = require('../models/episodes');
 var Verify = require('./verify');
 
 var showRouter = express.Router();
@@ -60,9 +60,9 @@ showRouter.route('/')
         .then(response => {
             // retrieve series id from the returned data
             // and search for series data from TVDB
-            console.log(response[0].id);
             tvdb.getSeriesAllById(response[0].id)
             .then(response => {
+                console.log(response.seriesName);
                 // create new Show object
                 var show = new Show({
                     _id: response.id,
@@ -76,28 +76,36 @@ showRouter.route('/')
                     rating: response.siteRating,
                     ratingCount: response.siteRatingCount,
                     status: response.status,
-                    banner: BASE_IMAGE_URL + response.banner
+                    banner: BASE_IMAGE_URL + response.banner,
+                    poster: "",
+                    subscribers: [],
+                    watchList: [],
+                    favorites: []
                 });
-            
-                Show.create(show, function(err, newShow){
-                    if(err){
-                        if (err) {
-                            if (err.code == 11000) {
-                                console.log('Show already exists');
-                                return res.status(409).end('Show already exists!');
+
+                tvdb.getSeriesPosters(response.id)
+                .then(response => {
+                    show.poster = BASE_IMAGE_URL + response[0].fileName;
+                    Show.create(show, function(err, newShow){
+                        if(err){
+                            if (err) {
+                                if (err.code == 11000) {
+                                    console.log('Show already exists');
+                                    return res.status(409).end('Show already exists!');
+                                }
+                                next(err);
                             }
-                            next(err);
                         }
-                    }
-                    console.log('Show created!');
-                    var id = newShow._id;
-                });
+                        console.log('Show created!');
+                        var id = newShow._id;
+                    });
+                })
+                .catch(error => {next(error);});
             })
             .catch(error => {next(error);})
-            })
+        })
         .catch(error => {next(error);});
     })
-    
 
 showRouter.route('/:id')
     .get(function(req, res, next) {
@@ -105,6 +113,6 @@ showRouter.route('/:id')
             if (err) next(err);
             res.json(show);
         });
-    })
+    });
 
 module.exports = showRouter;

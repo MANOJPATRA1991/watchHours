@@ -22,7 +22,7 @@ router.route('/')
     });
 });
 
-//user registration
+// user registration
 router.post('/register', function(req, res){
     User.register(new User({username: req.body.username, email: req.body.email}), req.body.password, function(err, user){
         if(err){
@@ -44,9 +44,9 @@ router.post('/register', function(req, res){
     }); 
 });
 
-//login user
+// login user
 router.post('/login', function(req, res, next){
-    //An optional info argument will be passed, containing additional details provided by the strategy's verify callback.
+    // An optional info argument will be passed, containing additional details provided by the strategy's verify callback.
    passport.authenticate('local', function(err, user, info){
        if(err){
            return next(err);
@@ -56,11 +56,11 @@ router.post('/login', function(req, res, next){
                err: info
            });
        }
-       //user will be assigned to req.user if login completes
+       // user will be assigned to req.user if login completes
        req.logIn(user, function(err){
            if(err){
                return res.status(500).json({
-                   err: 'Could not log in user'
+                   err: 'Could not log in user.'
                });
            }
            
@@ -76,10 +76,10 @@ router.post('/login', function(req, res, next){
                _id: user._id
            });
        });
-   })(req, res, next);//on success req.user contains the authenticated user
+   })(req, res, next); //on success req.user contains the authenticated user
 });
 
-//logout user
+// logout user
 router.get('/logout', function(req, res){
     //removes the req.user property and clear the login session
     req.logout();
@@ -88,7 +88,8 @@ router.get('/logout', function(req, res){
     });
 });
 
-router.get('/facebook', passport.authenticate('facebook'), function(req, res){});
+// facebook authentication with passport
+router.get('/facebook', passport.authenticate('facebook'));
 
 router.get('/facebook/callback', function(req, res, next){
     passport.authenticate('facebook', function(err, user, info){
@@ -106,10 +107,10 @@ router.get('/facebook/callback', function(req, res, next){
                     err: 'Could not log in user'
                 });
             }
-            
+
             var token = Verify.getToken({"username":user.username, "_id":user._id, "admin":user.admin});
-            
-            res.redirect(303, 'https://localhost:3443/?token=' + token + '&user=' + user.username + '&_id=' + user._id);
+
+            res.redirect(303, 'https://localhost:3443/#!/?token=' + token + '&user=' + user.username + '&_id=' + user._id);
         });
     })(req, res, next);
 });

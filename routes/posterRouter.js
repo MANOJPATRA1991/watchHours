@@ -15,10 +15,10 @@ var posterRouter = express.Router();
 posterRouter.use(bodyParser.json());
 var BASE_IMAGE_URL = "https://thetvdb.com/banners/";
 
-posterRouter.route('/')
+posterRouter.route('/:seriesId')
     .get(function(req, res, next){
         // /?seriesId=
-        var seriesId = req.query.seriesId;
+        var seriesId = req.params   .seriesId;
         var posters = [];
         if (seriesId) {
             // find all posters for a particular series id
@@ -32,8 +32,9 @@ posterRouter.route('/')
             // write result to the response as json
             res.json(posters);
         });
-    })
+    });
 
+posterRouter.route('/')
     .post(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
         // the tmdb api key for my account
         var apiKey = '5BB799C77561B167';
@@ -48,13 +49,11 @@ posterRouter.route('/')
         .then(response => {
             // retrieve series id from the returned data
             // and search for series data from TVDB
-            console.log(response[0].id);
             tvdb.getSeriesFanArts(response[0].id)
             .then(response => {
                 var posters = response;
-                console.log(response);
                 _.each(posters, function(data) {
-                    console.log(data);
+                    console.log(data.id);
                     var poster = new Poster({
                         _id: data.id,
                         poster: BASE_IMAGE_URL + data.fileName,

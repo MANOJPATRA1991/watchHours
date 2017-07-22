@@ -3,31 +3,31 @@ var Schema = mongoose.Schema;
 
 var passportLocalMongoose = require('passport-local-mongoose');
 var User = new Schema({
-  email: { 
-    type: String, 
-    unique: true 
-  },
-  username: {
-    type: String, 
-    unique: true
-  },
-  password: String,
+    email: {
+        type: String,
+        unique: true
+    },
+    username: {
+        type: String,
+        unique: true
+    },
+    password: String,
 
-  OauthId: String,
-  OauthToken: String,
+    OauthId: String,
+    OauthToken: String,
 
-  firstname: {
-      type: String,
-      default: ''
-  },
-  lastname: {
-      type:String,
-      default: ''
-  },
-  admin: {
-      type: Boolean,
-      default: false
-  }
+    firstname: {
+        type: String,
+        default: ''
+    },
+    lastname: {
+        type:String,
+        default: ''
+    },
+    admin: {
+        type: Boolean,
+        default: false
+    }
 });
 
 //User instance method

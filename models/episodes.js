@@ -1,6 +1,19 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+var commentSchema = new Schema({
+    comment:  {
+        type: String,
+        required: true
+    },
+    postedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
+}, {
+    timestamps: true
+});
+
 var Episode = new Schema({
     _id: Number,
     airedEpisodeNumber: Number,
@@ -16,7 +29,8 @@ var Episode = new Schema({
     seriesId: Number,
     writers: [
       String
-    ]
+    ],
+    comments:[commentSchema]
 });
 
 var Episode = mongoose.model('Episode', Episode);

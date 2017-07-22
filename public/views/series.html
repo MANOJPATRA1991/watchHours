@@ -1,0 +1,72 @@
+        <section>
+            <div class="container-fluid">
+                <div class="row episode-link">
+                    <a ui-sref="app.episode({seriesId: show._id, season: seasons[seasons.length - 1]})">
+                        <div class="col-md-12 guide">
+                            <span class="fa fa-chevron-right" style="float: right;"></span>
+                            <h5>Episode Guide</h5>
+                            <p>{{episodes.length}} episodes</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="seriesjumbo jumbotron">
+                            <div class="row">
+                                <div class="col-md-4 show-img-div align-items-center">
+                                    <img class="show-img" src="{{show.poster}}" alt="{{show.seriesName}}">
+                                </div>
+                                <div class="col-md-8 show-div">
+                                    <h1>{{show.seriesName}}</h1>
+                                    <p class="episode-info"><i class="fa fa-calendar" aria-hidden="true"></i><span>{{show.firstAired | date: 'MMM d, y'}}</span></p>
+                                    <p class="episode-info"><b>{{show.network}}</b>  <span class="rating"><i class="fa fa-star fa-lg star" aria-hidden="true"></i>  {{show.rating}}</span></p>
+                                    <p class="episode-info"><em><b>{{show.airsDayOfWeek}}s, {{show.airsTime}} GMT </b></em></p>
+                                    <div class="cap">
+                                        <span class="label label-default" ng-repeat="genre in show.genre">{{genre}}</span>
+                                    </div>
+                                    <div ng-class="isInFavorites ? 'green' : 'menus'"><a ng-click="addToFavorites()" uib-popover-html="heart" popover-trigger="'mouseenter'"><span class="fa fa-heart"></span></a></div>
+                                    <div ng-class="isInWatchlist ? 'green' : 'menus'"><a ng-click="addToWatchlist()" uib-popover-html="bookmark" popover-trigger="'mouseenter'"><span class="fa fa-bookmark"></span></a></div>
+                                    <div ng-class="isSubscribed ? 'green' : 'menus'"><a ng-click="subscribe()" uib-popover-html="star" popover-trigger="'mouseenter'"><span class="fa fa-star"></span></a></div>
+                                    <div>
+                                        <h3><b>Overview</b></h3>
+                                        <p>{{show.overview}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <uib-tabset active="active">
+                        <uib-tab index="0" heading="Episodes">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Seasons</h5>
+                                    <ul class="season-list">
+                                        <li class="tab-it" ng-repeat="season in seasons | orderBy: '-valueOf()'"><a ui-sref="app.episode({seriesId: show._id, season: season})">{{season}}</a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Years</h5>
+                                    <ul class="season-list">
+                                        <li class="tab-it" ng-repeat="year in firstAired | orderBy:'-toString()'"><a ui-sref="app.episode({seriesId: show._id, year: year})">{{year}}</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </uib-tab>
+                        <uib-tab index="1" heading="Fan Arts">
+                            <div ui-view="fan_arts"></div>
+                        </uib-tab>
+                        <uib-tab index="2" heading="Actors">
+                            <div ui-view="actors"></div>
+                        </uib-tab>
+                    </uib-tabset>
+                </div>
+            </div>
+        </div>
+        </section>

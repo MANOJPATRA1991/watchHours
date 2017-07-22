@@ -1,27 +1,45 @@
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation" bs-navbar>
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">
-            <i class="fa fa-television"></i>
-          Watch<strong>Hours</strong></a>
-        </div>
-        <div class="collapse navbar-collapse" id="navbar">
-          <ul class="nav navbar-nav navbar-right">
-            <li ng-class="{active: stateis('app')}"><a ui-sref="app"><i class="fa fa-home"></i> Home</a></li>
-            <li><a ui-sref="app.search"><i class="fa fa-search"></i> Search</a></li>
-            <li ng-if="admin"><a ui-sref="app.add"><i class="fa fa-plus-square-o"></i> Add</a></li>
-            <li ng-if="!currentUser"><a class="log" ng-click="openLogin()"><i class="fa fa-sign-in"></i> Login/Sign Up</a></li>
-            <li ng-if="currentUser"><a class="log" ui-sref="app.user">{{username}}</a></li>
-            <li ng-if="currentUser"><a class="log" ng-click="logout()"><i class="fa fa-sign-out"></i> Logout</a></li>
-          </ul>
-        </div>
-      </div>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand navbar-link" ui-sref="app"> <i class="glyphicon glyphicon-film"></i> <strong>watchHOURS</strong></a>
+      <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
     </div>
+    <div class="collapse navbar-collapse" id="navcol-1">
+      <ul class="nav navbar-nav">
+        <li ng-class="{active: stateis('app')}" role="presentation"><a ui-sref="app">HOME </a></li>
+        <li role="presentation"><a ui-sref="app.search">TV SHOWS</a></li>
+        <li role="presentation"><a href="#">PEOPLE </a></li>
+      </ul>
+      <ul class="nav navbar-nav right-nav">
+        <li role="presentation" ng-if="currentUser"><a> {{username}}</a></li>
+        <li role="presentation" ng-if="currentUser"><a ng-click="logout()"><i class="fa fa-sign-out"></i> LOG OUT</a></li>
+        <li role="presentation" ng-if="!currentUser"><a ui-sref="app.login"><i class="fa fa-sign-in"></i> LOG IN </a></li>
+        <li role="presentation" ng-if="!currentUser"><a ui-sref="app.register"><i class="fa fa-user"></i> SIGN UP</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-
+<div class="container-fluid" ng-hide="$state.includes(app.search)">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <input type="text" class="search form-control input-lg" aria-label="input" placeholder="Search by series name" ng-model="search.seriesName">
+      </div>
+      <ul class="showlist" ng-if="search.seriesName">
+        <li class="show cf" ng-repeat="show in shows | filter: search | orderBy: 'seriesName'">
+          <!--Using Angular markup like {{hash}} in a src attribute doesn't work right: The browser will fetch from the URL with the literal text {{hash}} until Angular replaces the expression inside {{hash}}. The ngSrc directive solves this problem.-->
+          <a class="title" ui-sref="app.series({seriesId: show._id})" title="{{show.seriesName}}" ng-click="resetFilters()">
+            <img src="{{show.poster}}" alt="{{show.seriesName}}">
+            <div>
+              <p>
+                <b>{{show.seriesName}}</b>
+              </p>
+              <p class="info"><b>{{show.network}}</b></p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

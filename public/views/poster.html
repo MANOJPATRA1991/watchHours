@@ -1,0 +1,7 @@
+<div class="container">
+    <div class="row">
+        <div class="poster" ng-repeat="poster in posters track by $index">
+            <a href="{{poster.poster}}" data-lightbox="{{show.seriesName}}" data-title="{{show.seriesName}}"><img src="{{poster.poster}}" alt="Image#{{$index}}"></a>
+        </div>
+    </div>
+</div>

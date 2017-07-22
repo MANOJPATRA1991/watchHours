@@ -1,61 +1,54 @@
-<ol class="breadcrumb">
-  <li><a href="./home">Home</a></li>
-  <li class="active">Search</li>
-</ol>
 
 <div class="jumbotron">
   <div class="container">
     <ul class="alphabet">
       <li ng-repeat="char in alphabet">
-        <span class="label label-default" ng-click="filterByAlphabet(char)">{{char}}</span>
+        <span ng-click="filterByAlphabet(char)">{{char}}</span>
       </li>
     </ul>
+    <br/>
     <ul class="genres">
       <li ng-repeat="genre in genres">
-        <span class="label label-default" ng-click="filterByGenre(genre)">{{genre}}</span>
+        <span ng-click="filterByGenre(genre)">{{genre}}</span>
       </li>
       <li>
-        <span class="label label-default" ng-click="showAll()">Show All</span>
+        <span ng-click="showAll()">Show All</span>
       </li>
     </ul>
-  </div>
-</div>
-
-<div class="container">
-  <div class="row">
-    <div class="form-group">
-      <input type="text" class="search form-control input-lg" aria-label="input" placeholder="Search by series name" ng-model="search.seriesName">
-    </div>
   </div>
 </div>
 
 <div class="container-fluid">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      {{headingTitle}}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <input type="text" class="search form-control input-lg" aria-label="input" placeholder="Search by series name" ng-model="search.seriesName">
+      </div>
     </div>
-    <div class="panel-body">
-      <div class="row">
-        <div class="col-xs-6 col-md-3 modPanel" ng-repeat="show in filtered = shows  | filter: search | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
-          <div class="thumbnail">
-              <a href="/shows/{{show._id}}">
-                <img class="poster" style="height:260px;" ng-src="{{show.poster}}"/>
-              </a>
-              <a href="/shows/{{show._id}}">
-                <div class="caption">
-                  <p>{{show.seriesName}}</p>
-                  <p>Episodes: {{show.episodes.length}}</p>
-                  <p>Airs: {{show.airsDayOfWeek}}</p>
-                  <p>Airs At: {{show.airsTime}}</p>
-                  <p>Airs On: {{show.network}}</p>
-                  <p>Status: {{show.status}}</p>
-                </div>
-              </a>
-            </div>
+  </div>
+</div>
+
+<div id="content-search" class="container">
+  <div class="flex-row">
+    <div class="col-xsl-6 col-xs-12 col-sm-6 col-md-4" ng-repeat="show in filtered = shows  | filter: search | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit">
+      <div class="thumbnail">
+        <img src="{{show.poster}}" alt="{{show.seriesName}}">
+        <div class="clearfix"></div>
+        <div class="caption">
+          <p class="title">
+            <a class="title" ui-sref="app.series({seriesId: show._id})" title="{{show.seriesName}}">{{show.seriesName}}</a>
+          </p>
+          <p class="info">{{show.network}} <span class="rating"><i class="fa fa-star fa-lg star" aria-hidden="true"></i>  {{show.rating}}</span></p>
+          <p class="info"><i class="fa fa-calendar" aria-hidden="true"></i>  {{show.firstAired | date: 'yyyy'}}</p>
+          <div class="cap">
+            <span class="label label-default" ng-repeat="genre in show.genre">{{genre}}</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
 
   <div class="text-center">
       <ul uib-pagination boundary-links="true" max-size="noOfPages" total-items="totalItems" items-per-page="entryLimit" ng-model="currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>

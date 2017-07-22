@@ -11,10 +11,9 @@ var async = require('async');
 var mongoose = require('mongoose');
 //set up passport
 var passport = require('passport');
+var config = require('./config');
 //require auhenticate.js file
 var authenticate = require('./authenticate');
-
-var config = require('./config');
 
 mongoose.connect(config.mongoUrl);
 
@@ -30,6 +29,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var showRouter = require('./routes/showRouter');
 var episodeRouter = require('./routes/episodeRouter');
+var actorsRouter = require('./routes/actorsRouter');
 var posterRouter = require('./routes/posterRouter');
 var subscription = require('./routes/subscription');
 var app = express();
@@ -52,11 +52,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
-// app.use(expressSession({
-//     secret: 'keyboard cat',
-//     resave: false,
-//     saveUninitialized: true
-// }));
+
 //passport config
 //middleware required to initialize passport
 app.use(passport.initialize());
@@ -68,6 +64,7 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/shows', showRouter);
 app.use('/episodes', episodeRouter);
+app.use('/actors', actorsRouter)
 app.use('/posters', posterRouter);
 app.use('/subscription', subscription);
 app.use(function(req, res, next) {
