@@ -3,7 +3,6 @@ var cors = require('cors');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-// var expressSession = require('express-session');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var TVDB = require('node-tvdb');
@@ -12,10 +11,12 @@ var mongoose = require('mongoose');
 //set up passport
 var passport = require('passport');
 var config = require('./config');
-//require auhenticate.js file
+//require authenticate.js file
 var authenticate = require('./authenticate');
 
 mongoose.connect(config.mongoUrl);
+
+nev = require('email-verification')(mongoose);
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
