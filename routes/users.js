@@ -9,36 +9,10 @@ var bodyParser = require('body-parser');
 
 var User = require('../models/users');
 var Verify = require('./verify');
-
+var agenda = require('agenda')({ db: { address: 'localhost:27017/watchHours' } });
+var sugar = require('sugar');
+var nodemailer = require('nodemailer');
 router.use(bodyParser.json());
-
-// var myHasher = function(password, tempUserData, insertTempUser, callback) {
-//                       var hash = bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-//                       return insertTempUser(hash, tempUserData, callback);
-//                     };
-
-nev.configure({
-    verificationURL: 'http://localhost:3443/#!/email-verification/${URL}',
-    URLLength: 48,
-    persistentUserModel: User,
-    tempUserCollection: 'tempusers',
- 
-    transportOptions: {
-        service: 'Gmail',
-        auth: {
-            user: 'patra.manoj0@gmail.com',
-            pass: 'MAN@1991'
-        }
-    },
-    verifyMailOptions: {
-        from: 'Do Not Reply <patra.manoj0@gmail.com>',
-        subject: 'Please confirm account',
-        html: 'Click the following link to confirm your account:</p><p>${URL}</p>',
-        text: 'Please confirm your account by clicking the following link: ${URL}'
-    },
-    shouldSendConfirmation: false
-  }, function(error, options){
-});
 
 /* GET users listing. */
 router.route('/')
@@ -47,15 +21,6 @@ router.route('/')
         if (err) next(err);
         res.json(user);
     });
-});
-
-nev.generateTempUserModel(User);
- 
-// using a predefined file 
-var TempUser = require('../models/tempUserModel');
-nev.configure({
-    tempUserModel: TempUser
-}, function(error, options){
 });
 
 // user registration
@@ -75,59 +40,57 @@ router.post('/register', function(req, res){
         if(req.body.lastname){
             user.lastname = req.body.lastname;
         }
-        nev.createTempUser(user, function(err, existingPersistentUser, newTempUser) {
-            // some sort of error 
-            if (err)
-                // handle error... 
-                return res.status(200).json({err: 'Could not log in user'}); 
-    
-            // user already exists in persistent collection... 
-            if (existingPersistentUser)
-                return res.status(500).json("User already exists. Login to continue");
-         
-            // a new user 
-            if (newTempUser) {
-                var URL = newTempUser[nev.options.URLFieldName];
-                nev.sendVerificationEmail(email, URL, function(err, info) {
-                    if (err)
-                        // handle error... 
-                        return res.status(500).json("Could not login user");
-                    // flash message of success 
-                    console.log("email sent!");
-                });
-         
-            // user already exists in temporary collection... 
-            } else {
-                // flash message of failure...
-                console.log("Cannot create user. User already exists"); 
-            }
+
+        var token = Verify.getToken({"username":user.username, "_id":user._id, "admin":user.admin});
+
+        agenda.define('verify user email', {concurrency: 1}, function(job, done){
+          var transporter = nodemailer.createTransport({
+              service: 'SendGrid',
+              auth: { user: 'MANOJPATRA', pass: 'MAN#1991' }
+            });
+
+            var mailOptions = {
+              from: 'Manoj Patra 👻 <patra.manoj0@gmail.com>',
+              to: user.email,
+              subject: 'Confirm Registration ✔',
+              text: 'Hello ' + user.username,
+              html: '<a href="https://localhost:3443/users/verify?authToken="' + token + '>Click Here to Continue With Registration</a>'
+            };
+
+            transporter.sendMail(mailOptions, function(error, response) {
+                  console.log('Message sent: ' + response);
+            });
         });
 
-        var url = '...';
-        nev.confirmTempUser(url, function(err, user) {
-            if (err)
-                // handle error... 
-                return res.status(500).json("Could not create user");
-            // user was found! 
-            if (user) {
-              // optional 
-              nev.sendConfirmationEmail(user['email_field_name'], function(err, info) {
-                  // redirect to their profile... 
-                  user.save(function(err, user){
-                    passport.authenticate('local')(req, res, function(){
-                        return res.status(200).json({status: 'Account Registered! Please check your email for activation'}); 
-                    }); 
-                  });
-              });
-            }
-            
-            // user's data probably expired... 
-            else
-                // redirect to sign-up 
-                redirect('/register');  
+        agenda.on('start', function(job) {
+          console.log("Job %s starting", job.attrs.name);
+        });
+
+        agenda.on('complete', function(job) {
+          console.log("Job %s finished", job.attrs.name);
+        });
+
+        user.save(function(err, user){
+          passport.authenticate('local')(req, res, function(){
+              agenda.start();
+              agenda.schedule('now', 'verify user email');
+              return res.status(200).json({status: 'Account Registered! Please check your email for activation'}); 
+          }); 
         });
     }); 
 });
+
+router.get('/email-verification', function(req, res) {
+    res.status(200).send('Verify email!');
+  });
+
+router.get('/verify', function(req, res) {
+      User.verifyEmail(req.query.authToken, function(err, existingAuthToken) {
+        if(err) console.log('err:', err);
+
+        res.status(200).send('Email successfully verified!');
+      });
+  });
 
 // login user
 router.post('/login', function(req, res, next){

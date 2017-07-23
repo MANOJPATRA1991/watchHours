@@ -27,15 +27,6 @@ var User = new Schema({
     admin: {
         type: Boolean,
         default: false
-    },
-    active: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    temporaryToken: {
-        type: String,
-        required: true
     }
 });
 

@@ -14,9 +14,8 @@ var config = require('./config');
 //require authenticate.js file
 var authenticate = require('./authenticate');
 
-mongoose.connect(config.mongoUrl);
 
-nev = require('email-verification')(mongoose);
+mongoose.connect(config.mongoUrl);
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
