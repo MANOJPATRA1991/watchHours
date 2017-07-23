@@ -27,6 +27,15 @@ var User = new Schema({
     admin: {
         type: Boolean,
         default: false
+    },
+    active: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    temporaryToken: {
+        type: String,
+        required: true
     }
 });
 
@@ -34,6 +43,10 @@ var User = new Schema({
 User.methods.getName = function(){
     return (this.firstname + ' ' + this.lastname);
 }
+
+// User.methods.comparePassword= function(password){
+//     return bcrypt.compareSync(password, this.password);
+// }
 
 User.plugin(passportLocalMongoose);
 

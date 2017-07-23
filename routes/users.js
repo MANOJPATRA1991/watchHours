@@ -24,7 +24,10 @@ router.route('/')
 
 // user registration
 router.post('/register', function(req, res){
-    User.register(new User({username: req.body.username, email: req.body.email}), req.body.password, function(err, user){
+    User.register(new User({username: req.body.username, 
+                  email: req.body.email
+                  temporaryToken: Verify.getToken({"username":user.username, "_id":user._id, "admin":user.admin});
+                }), req.body.password, function(err, user){
         if(err){
             return res.status(500).json({err: err});
         }
@@ -38,7 +41,7 @@ router.post('/register', function(req, res){
         }
         user.save(function(err, user){
             passport.authenticate('local')(req, res, function(){
-                return res.status(200).json({status: 'Registration Successful!'}); 
+                return res.status(200).json({status: 'Account Registered! Please check your email for activation'}); 
             }); 
         });
     }); 
