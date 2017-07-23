@@ -12,10 +12,10 @@ var Verify = require('./verify');
 
 router.use(bodyParser.json());
 
-var myHasher = function(password, tempUserData, insertTempUser, callback) {
-                      var hash = bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-                      return insertTempUser(hash, tempUserData, callback);
-                    };
+// var myHasher = function(password, tempUserData, insertTempUser, callback) {
+//                       var hash = bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+//                       return insertTempUser(hash, tempUserData, callback);
+//                     };
 
 nev.configure({
     verificationURL: 'http://localhost:3443/#!/email-verification/${URL}',
