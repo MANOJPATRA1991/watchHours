@@ -78,15 +78,32 @@ angular.module('watchHoursApp')
                     }
                 }
             })
-            .state('app.login.otherSignIn', {
+            .state('app.forgotpassword', {
+                url: 'forgotpassword',
                 views: {
                     // Absolutely targets the 'content' view in the 'app' state
                     'header@': {
                         template: ""
                     },
                     'content@': {
-                        templateUrl: 'views/otherSignIn.html',
-                        controller: 'LoginCtrl'
+                        templateUrl: 'views/forgotpassword.html',
+                        controller: 'ForgotPasswordCtrl'
+                    },
+                    'footer@': {
+                        template: ""
+                    }
+                }
+            })
+            .state('app.resetpassword', {
+                url: 'resetpassword?authToken',
+                views: {
+                    // Absolutely targets the 'content' view in the 'app' state
+                    'header@': {
+                        template: ""
+                    },
+                    'content@': {
+                        templateUrl: 'views/resetpassword.html',
+                        controller: 'ResetPasswordCtrl'
                     },
                     'footer@': {
                         template: ""
@@ -135,21 +152,9 @@ angular.module('watchHoursApp')
                 url: 'user/:id',
                 views: {
                     // Absolutely targets the 'content' view in the 'app' state
-                    'content@app': {
+                    'content@': {
                         templateUrl: 'views/user.html',
                         controller: 'UserCtrl'
-                    },
-                    // Absolutely targets the 'profile' view in the 'app.user' state
-                    'profile@app.user': {
-                        templateUrl: 'views/user_profile.html'
-                    },
-                    // Absolutely targets the 'subscription' view in the 'app.user' state
-                    'subscription@app.user': {
-                        templateUrl: 'views/subscription.html'
-                    },
-                    // Absolutely targets the 'watchlist' view in the 'app.user' state
-                    'watchlist@app.user': {
-                        templateUrl: 'views/watchlist.html'
                     }
                 }
             });
@@ -165,4 +170,21 @@ angular.module('watchHoursApp')
             $rootScope.currentUser = true;
             $rootScope.$broadcast('login:Successful');
         }
+
+        Array.prototype.contains = function(v) {
+            for(var i = 0; i < this.length; i++) {
+                if(this[i] === v) return true;
+            }
+            return false;
+        };
+
+        Array.prototype.unique = function() {
+            var arr = [];
+            for(var i = 0; i < this.length; i++) {
+                if(!arr.contains(this[i])) {
+                    arr.push(this[i]);
+                }
+            }
+            return arr;
+        };
     });

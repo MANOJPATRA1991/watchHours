@@ -22,7 +22,7 @@
                                     <p class="episode-info"><b>{{show.network}}</b>  <span class="rating"><i class="fa fa-star fa-lg star" aria-hidden="true"></i>  {{show.rating}}</span></p>
                                     <p class="episode-info"><em><b>{{show.airsDayOfWeek}}s, {{show.airsTime}} GMT </b></em></p>
                                     <div class="cap">
-                                        <span class="label label-default" ng-repeat="genre in show.genre">{{genre}}</span>
+                                        <span ng-repeat="genre in show.genre">{{genre}}</span>
                                     </div>
                                     <div ng-class="isInFavorites ? 'green' : 'menus'"><a ng-click="addToFavorites()" uib-popover-html="heart" popover-trigger="'mouseenter'"><span class="fa fa-heart"></span></a></div>
                                     <div ng-class="isInWatchlist ? 'green' : 'menus'"><a ng-click="addToWatchlist()" uib-popover-html="bookmark" popover-trigger="'mouseenter'"><span class="fa fa-bookmark"></span></a></div>
@@ -41,7 +41,7 @@
         <section>
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" align="center">
                     <uib-tabset active="active">
                         <uib-tab index="0" heading="Episodes">
                             <div class="row">

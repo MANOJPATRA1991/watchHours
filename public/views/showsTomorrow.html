@@ -1,7 +1,7 @@
-<div class="col-md-12" ng-cloak ng-if="tomorrowsepisodes.length == 0">
+<div class="col-md-12" align="center" ng-cloak ng-if="tomorrowsepisodes.length == 0">
     <h4>No Shows for Tomorrow!!</h4>
 </div>
-<div class="col-xsl-6 col-xs-12 col-sm-6 col-md-4" ng-repeat="episode in tomorrowsepisodes">
+<div class="col-xsl-6 col-xs-12 col-sm-6 col-md-4" align="center" ng-repeat="episode in tomorrowsepisodes">
     <div class="thumbnail">
         <img src="{{showName(episode.seriesId).poster}}" alt="{{showName(episode.seriesId).seriesName}}">
         <div class="clearfix"></div>

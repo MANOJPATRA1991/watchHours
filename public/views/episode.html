@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" align="center">
                     <h1>{{show.seriesName}}</h1>
                     <h4>Episodes List</h4>
                 </div>
@@ -10,7 +10,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6" align="center">
             <form>
                 <div class="form-group">
                     <label for="sel1">Select season:</label>
@@ -19,7 +19,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" align="center">
             <form>
                 <div class="form-group">
                     <label for="sel2">Select year:</label>
@@ -33,7 +33,7 @@
 
 <div class="container episode-container">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" align="center">
             <ul uib-pager total-items="totalItems" ng-model="currentPage" items-per-page="itemsPerPage"></ul>
         </div>
         <div class="col-md-12" ng-repeat="episode in episodes.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))">
@@ -58,11 +58,11 @@
                     <div class="col-md-12">
                         <uib-tabset active="active">
                             <uib-tab index="0" heading="Discussions">
-                                <div class="col-xs-9 col-xs-offset-1">
+                                <div class="col-xs-12 col-md-9 col-md-offset-1">
                                     <form class="form-horizontal" name="commentForm" ng-submit="submitComment(episode._id)" novalidate>
                                         <div class="form-group"  ng-class="{ 'has-error' : commentForm.comments.$error.required && !commentForm.comments.$pristine }">
-                                            <label for="comments" class="col-sm-2 control-label">Share your views</label>
-                                            <div class="col-sm-10">
+                                            <label for="comments" class="control-label">Share your views</label>
+                                            <div>
                                                 <textarea ng-disabled="!currentUser" class="form-control" rows="3" name="comments"
                                                           ng-model="mycomment.comment" required>
                                                 </textarea>
@@ -70,10 +70,9 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <div class="col-sm-offset-2 col-sm-10">
+                                            <div>
                                                 <button type="submit" class="btn btn-primary" ng-hide="!currentUser" ng-disabled="commentForm.$invalid">Submit Comment</button>
                                                 <a ui-sref="app.login" type="submit" class="btn btn-primary" ng-hide="currentUser">Log in to Post a Comment</a>
-
                                             </div>
                                         </div>
                                     </form>
@@ -85,9 +84,11 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="col-xs-9 col-xs-offset-1">
-                                    <h4>Audience Reviews &nbsp;&nbsp;&nbsp;
-                                        <small>Sort by: &nbsp;
+                                <div class="col-xs-12 col-md-9 col-md-offset-1">
+                                    <h4>Audience Reviews</h4>
+                                </div>
+                                <div class="col-xs-12 col-md-9 col-md-offset-1">
+                                    <h6>Sort by: &nbsp;
                                             <select ng-init="orderText='createdAt'" ng-model="orderText">
                                                 <option value="createdAt">Date</option>
                                                 <option value="comment">Comment</option>
@@ -96,8 +97,10 @@
                                             <select ng-model="rev">
                                                 <option value="">Ascending</option>
                                                 <option value="reverse">Descending</option>
-                                            </select></p>
-                                        </small></h4>
+                                            </select>
+                                    </h6>
+                                </div>
+                                <div class="col-xs-12 col-md-9 col-md-offset-1">
                                     <ul class="list-unstyled">
                                         <li ng-repeat="comment in episode.comments | orderBy:orderText:rev">
                                             <blockquote>

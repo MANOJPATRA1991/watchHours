@@ -1,33 +1,86 @@
+<div class="container" ng-if="currentUser && !isVerified">
+  <div class="row">
+    <div class="col-md-12">
+      <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="flex-row">
+    <div class="col-md-12 text-center">
+      <h1>Welcome</h1>
+      <h1>{{username}}</h1>
+  </div>
+</div>
 
-
-<ol class="breadcrumb">
-  <li><a href="./home">Home</a></li>
-  <li class="active">Subscriptions</li>
-</ol>
-
-<div class="container-fluid">
-      <div class="panel panel-primary top">
-        <div class="panel-heading">
-          <h3 class="panel-title">Your subscriptions</h3>
-        </div>
-        <div class="panel-body">
-          <div class="col-xs-6 col-md-3 modPanel" ng-repeat="show in shows | orderBy:'rating':true" ng-if="show.subscribers.indexOf(uid) !== -1">
-            <div class="thumbnail">
-              <a href="/shows/{{show._id}}">
-                <img class="poster" style="height:260px;" ng-src="{{show.poster}}"/>
-              </a>
-              <a href="/shows/{{show._id}}">
-                <div class="caption">
-                  <p>{{show.seriesName}}</p>
-                  <p>Episodes: {{show.episodes.length}}</p>
-                  <p>Airs: {{show.airsDayOfWeek}}</p>
-                  <p>Airs At: {{show.airsTime}}</p>
-                  <p>Airs On: {{show.network}}</p>
-                  <p>Status: {{show.status}}</p>
-                </div>
-              </a>
-            </div>
+<div id="content" class="container">
+  <div class="flex-row">
+    <div class="col-md-12">
+      <h1 class="text-center">Your Subscriptions</h1>
+    </div>
+    <div class="col-xsl-6 col-xs-12 col-sm-6 col-md-4" ng-repeat="show in shows | subscribers | limitTo: 12">
+      <div class="thumbnail">
+        <img src="{{show.poster}}" alt="{{show.seriesName}}">
+        <div class="clearfix"></div>
+        <div class="caption">
+          <p class="title">
+            <a class="title" ui-sref="app.series({seriesId: show._id})" title="{{show.seriesName}}"><b>{{show.seriesName}}</b></a>
+          </p>
+          <p class="info"><b>{{show.network}}</b> <span class="rating"><i class="fa fa-star fa-lg star" aria-hidden="true"></i>  {{show.rating}}</span></p>
+          <p class="info"><i class="fa fa-calendar" aria-hidden="true"></i>  {{show.firstAired | date: 'yyyy'}}</p>
+          <div class="cap">
+            <span ng-repeat="genre in show.genre"><b>{{genre}}</b></span>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div id="content" class="container">
+  <div class="flex-row">
+    <div class="col-md-12">
+      <h1 class="text-center">Shows in your Watch List</h1>
+    </div>
+    <div class="col-xsl-6 col-xs-12 col-sm-6 col-md-4" ng-repeat="show in shows | watchList | limitTo: 12">
+      <div class="thumbnail">
+        <img src="{{show.poster}}" alt="{{show.seriesName}}">
+        <div class="clearfix"></div>
+        <div class="caption">
+          <p class="title">
+            <a class="title" ui-sref="app.series({seriesId: show._id})" title="{{show.seriesName}}"><b>{{show.seriesName}}</b></a>
+          </p>
+          <p class="info"><b>{{show.network}}</b> <span class="rating"><i class="fa fa-star fa-lg star" aria-hidden="true"></i>  {{show.rating}}</span></p>
+          <p class="info"><i class="fa fa-calendar" aria-hidden="true"></i>  {{show.firstAired | date: 'yyyy'}}</p>
+          <div class="cap">
+            <span ng-repeat="genre in show.genre"><b>{{genre}}</b></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="content" class="container">
+  <div class="flex-row">
+    <div class="col-md-12">
+      <h1 class="text-center">Your Favorite Shows</h1>
+    </div>
+    <div class="col-xsl-6 col-xs-12 col-sm-6 col-md-4" ng-repeat="show in shows | favorites | limitTo: 12">
+      <div class="thumbnail">
+        <img src="{{show.poster}}" alt="{{show.seriesName}}">
+        <div class="clearfix"></div>
+        <div class="caption">
+          <p class="title">
+            <a class="title" ui-sref="app.series({seriesId: show._id})" title="{{show.seriesName}}"><b>{{show.seriesName}}</b></a>
+          </p>
+          <p class="info"><b>{{show.network}}</b> <span class="rating"><i class="fa fa-star fa-lg star" aria-hidden="true"></i>  {{show.rating}}</span></p>
+          <p class="info"><i class="fa fa-calendar" aria-hidden="true"></i>  {{show.firstAired | date: 'yyyy'}}</p>
+          <div class="cap">
+            <span ng-repeat="genre in show.genre"><b>{{genre}}</b></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

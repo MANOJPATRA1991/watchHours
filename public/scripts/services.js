@@ -1,16 +1,30 @@
 angular.module('watchHoursApp')
+
+/** This is the BASE URL for the application. */
 .constant("baseURL", "https://localhost:3443")
+
+
+/**
+ *  This factory is used to perform GET request for all shows
+ */
 .factory('Shows', ['$resource', 'baseURL', function($resource, baseURL){
+        // empty reference array
         var Shows = $resource(baseURL + '/shows', {}, {
             query: {
                 method: 'GET',
+                cache: true,
                 isArray: true
             }
         });
         return Shows;
     }])
 
+
+/**
+ *  This factory is used to perform GET request for a particular show
+ */
 .factory('Series', ['$resource', 'baseURL', function($resource, baseURL){
+        // empty reference object
         var Series = $resource(baseURL + '/shows/:id', {seriesId:'@id'}, {
            query: {
                method: 'GET',
@@ -20,17 +34,28 @@ angular.module('watchHoursApp')
         return Series;
     }])
 
+
+/**
+ *  This factory is used to perform GET request for episodes belonging to a particular show
+ */
 .factory('Episodes', ['$resource', 'baseURL', function($resource, baseURL){
+        // empty reference array
         var Episodes = $resource(baseURL + '/episodes/:seriesId', {seriesId:'@seriesId'}, {
             query: {
                 method: 'GET',
+                cache: true,
                 isArray: true
             }
         });
         return Episodes;
     }])
 
+
+/**
+ *  This factory is used to perform GET request for a posters belonging to a particular show
+ */
 .factory('Posters', ['$resource', 'baseURL', function($resource, baseURL){
+        // empty reference array
         var Posters = $resource(baseURL + '/posters/:seriesId', {seriesId:'@seriesId'}, {
             query: {
                 method: 'GET',
@@ -40,7 +65,12 @@ angular.module('watchHoursApp')
         return Posters;
     }])
 
+
+/**
+ *  This factory is used to perform GET request for actors of a particular show
+ */
 .factory('Actors', ['$resource', 'baseURL', function($resource, baseURL){
+    // empty reference array
     var Actors = $resource(baseURL + '/actors/:seriesId', {seriesId:'@seriesId'}, {
         query: {
             method: 'GET',
@@ -51,6 +81,9 @@ angular.module('watchHoursApp')
 }])
 
 
+/**
+ *  This factory is used to perform POST request to subscribe, watchlist and favorites
+ */
 .factory('Subscription', ['$http', 'baseURL', function($http, baseURL) {
         return {
             subscriptions: function(show, uid) {
@@ -65,6 +98,10 @@ angular.module('watchHoursApp')
         };
     }])
 
+
+/**
+ *  This factory is used to perform PUT request for comments in a particular episode
+ */
 .factory('commentFactory', ['$resource', 'baseURL', function ($resource, baseURL) {
 
     return $resource(baseURL + "/episodes/:id/comments/:commentId", {id:"@Id", commentId: "@CommentId"}, {
@@ -75,8 +112,14 @@ angular.module('watchHoursApp')
 
 }])
 
+
 .factory('HomeServices', [function(){
         var homeServices = {};
+        var TODAY = moment().startOf('day');
+
+        var TOMORROW = moment().add(1, 'days').startOf('day');
+
+        // compare shows based on rating
         homeServices.compare = function(a, b) {
             // Use toUpperCase() to ignore character casing
             const ratingA = a.rating;
@@ -91,15 +134,20 @@ angular.module('watchHoursApp')
             return comparison* -1;
         };
 
-        homeServices.showToday = function(today) {
-            var now = moment();
-            var toDay = moment(today);
-            if (now.isSame(toDay, 'day')) {
-                console.log(now);
-                console.log(toDay);
-                return true;
-            }
-        };
+        // check if day is today
+        homeServices.isToday = function(momentDate) {
+            return momentDate.isSame(TODAY, 'd');
+        }
+
+        // check if day is tomorrow
+        homeServices.isTomorrow = function(momentDate) {
+            return momentDate.isSame(TOMORROW, 'd');
+        }
+
+        // check if day is within this week
+        homeServices.isWithinAWeek = function(momentDate) {
+            return momentDate.isAfter(TODAY, 'd') && momentDate.isBefore(moment().endOf('week'));
+        }
 
         return homeServices;
     }])
@@ -130,15 +178,19 @@ angular.module('watchHoursApp')
     var TOKEN_KEY = 'Token';
     var isAuthenticated = false;
     var username = '';
+    var isVerified = false;
     var admin = false;
     var authToken = undefined;
     var _id = '';
+    var error = '';
+    var message = '';
 
     function useCredentials(credentials) {
         isAuthenticated = true;
         username = credentials.username;
         authToken = credentials.token;
         admin = credentials.admin;
+        isVerified = credentials.isVerified;
         _id = credentials._id;
         // Set the token as header for your requests!
         $http.defaults.headers.common['x-access-token'] = authToken;
@@ -160,6 +212,7 @@ angular.module('watchHoursApp')
         authToken = undefined;
         username = '';
         admin = false;
+        isVerified = false;
         isAuthenticated = false;
         $http.defaults.headers.common['x-access-token'] = authToken;
         $localStorage.remove(TOKEN_KEY);
@@ -169,16 +222,46 @@ angular.module('watchHoursApp')
         storeUserCredentials(data);
     };
 
+    authFac.forgotPassword = function(email){
+        $resource(baseURL + "/users/forgotpassword")
+            .save(email,
+            function(response) {
+                message = response.res;
+                $rootScope.$broadcast('email sent');
+            },
+            function(err) {
+                error = err.data.err.message;
+                $rootScope.$broadcast('email not sent');
+            }
+        );
+    }
+
+    authFac.resetPassword = function(){
+        return $resource(baseURL + "/users/resetpassword", {authToken: '@authToken'}, {
+            'update': {
+                method: 'PUT'
+            }
+        });
+    }
+
     authFac.login = function(loginData) {
 
         $resource(baseURL + "/users/login")
             .save(loginData,
             function(response) {
-                storeUserCredentials({username:loginData.username, token: response.token, admin: response.admin, _id: response._id});
+                storeUserCredentials({
+                    username:loginData.username, 
+                    token: response.token, 
+                    admin: response.admin, 
+                    _id: response._id,
+                    isVerified: response.isVerified
+                });
                 $rootScope.$broadcast('login:Successful');
             },
-            function(error) {
+            function(err) {
                 isAuthenticated = false;
+                error = err.data.err.message;
+                $rootScope.$broadcast('login:Unsuccessful');
             }
         );
     };
@@ -216,12 +299,24 @@ angular.module('watchHoursApp')
         return username;
     };
 
+    authFac.isVerified = function() {
+        return isVerified;
+    };
+
     authFac.isAdmin = function(){
         return admin;
     }
 
     authFac.uid = function(){
         return _id;
+    }
+
+    authFac.Error = function(){
+        return error;
+    }
+
+    authFac.Message = function(){
+        return message;
     }
 
     loadUserCredentials();

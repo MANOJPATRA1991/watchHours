@@ -1,4 +1,7 @@
 <div class="container-fluid">
+    <div class="row" style="z-index: 100; text-align: center;" ng-if="!currentUser">
+        <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>
+    </div>
     <div class="row">
         <div class="login-card">
             <form class="form-signin" ng-submit="doLogin()" novalidate>
@@ -7,11 +10,19 @@
                 <formly-form model="user" fields="userFields" form="vm.userForm">
                     <button type="submit" class="btn btn-primary btn-block btn-lg btn-signin" ng-disabled="vm.userForm.$invalid">Sign in</button>
                     <a ui-sref="app.register" type="button" class="btn btn-primary btn-block btn-lg btn-signin">New User?</a>
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <a href="users/facebook" target="_self" type="submit" id="facebook" class="btn btn-primary btn-block btn-lg btn-signin"><i class="fa fa-facebook-official"></i> Facebook</a>
+                        </div>
+                        <div class="col-xs-6">
+                            <a href="users/facebook" target="_self" type="submit" id="google" class="btn btn-primary btn-block btn-lg btn-signin"><i class="fa fa-google"></i> Google</a>
+                        </div>
+                    </div>
                 </formly-form>
             </form>
-            <a href="#" class="forgot-password">Forgot your password?</a>
+            <a ui-sref="app.forgotpassword" class="forgot-password">Forgot your password?</a>
             <br>
-            <a ui-sref="app.login.otherSignIn" class="forgot-password">Other Sign in options</a>
         </div>
     </div>
 </div>

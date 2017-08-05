@@ -1,6 +1,13 @@
+<div class="container" ng-if="currentUser && !isVerified">
+  <div class="row">
+    <div class="col-md-12">
+      <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>
+    </div>
+  </div>
+</div>
 <div class="container">
-  <div class="flex-row">
-    <div class="col-md-12 upcoming">
+  <div class="row">
+    <div class="col-md-12 upcoming" align="center">
       <div class="btn-group buttonshow" role="group">
         <a class="btn btn-default" type="button" ui-sref="app.showsToday" ng-class="{active: stateis('app.showday')}">Now </a>
         <a class="btn btn-default" type="button" ui-sref="app.showsTomorrow">Tomorrow </a>
@@ -12,8 +19,8 @@
 </div>
 
 <div id="content" class="container">
-  <div class="flex-row">
-    <div class="col-md-12">
+  <div class="row">
+    <div class="col-md-12" align="center">
       <h1>Popular Shows</h1>
     </div>
     <div class="col-xsl-6 col-xs-12 col-sm-6 col-md-4" ng-repeat="show in shows | limitTo: 12">

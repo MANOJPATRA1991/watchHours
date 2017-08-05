@@ -8,10 +8,9 @@
       <ul class="nav navbar-nav">
         <li ng-class="{active: stateis('app')}" role="presentation"><a ui-sref="app">HOME </a></li>
         <li role="presentation"><a ui-sref="app.search">TV SHOWS</a></li>
-        <li role="presentation"><a href="#">PEOPLE </a></li>
       </ul>
       <ul class="nav navbar-nav right-nav">
-        <li role="presentation" ng-if="currentUser"><a> {{username}}</a></li>
+        <li role="presentation" ng-if="currentUser"><a ui-sref="app.user({id: uid})"> {{username}}</a></li>
         <li role="presentation" ng-if="currentUser"><a ng-click="logout()"><i class="fa fa-sign-out"></i> LOG OUT</a></li>
         <li role="presentation" ng-if="!currentUser"><a ui-sref="app.login"><i class="fa fa-sign-in"></i> LOG IN </a></li>
         <li role="presentation" ng-if="!currentUser"><a ui-sref="app.register"><i class="fa fa-user"></i> SIGN UP</a></li>

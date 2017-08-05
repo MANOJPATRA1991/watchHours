@@ -12,6 +12,7 @@ var Verify = require('./verify');
 var agenda = require('agenda')({ db: { address: 'localhost:27017/watchHours' } });
 var sugar = require('sugar');
 var nodemailer = require('nodemailer');
+
 router.use(bodyParser.json());
 
 /* GET users listing. */
@@ -41,8 +42,8 @@ router.post('/register', function(req, res){
             user.lastname = req.body.lastname;
         }
 
-        var token = Verify.getToken({"username":user.username, "_id":user._id, "admin":user.admin});
-
+        user.tempToken = Verify.getToken({"username":req.body.username, "_id":user._id, "admin":user.admin});
+        console.log(user.tempToken);
         agenda.define('verify user email', {concurrency: 1}, function(job, done){
           var transporter = nodemailer.createTransport({
               service: 'SendGrid',
@@ -54,11 +55,18 @@ router.post('/register', function(req, res){
               to: user.email,
               subject: 'Confirm Registration ✔',
               text: 'Hello ' + user.username,
-              html: '<a href="https://localhost:3443/users/verify?authToken="' + token + '>Click Here to Continue With Registration</a>'
+              html: '<p>Hello ' + user.username + '<br> Greetings from watchHours' + 
+              'Click on the link below to verify email address.</p>' 
+                    + '<a href="https://localhost:3443/users/verify?authToken=' + 
+                    user.tempToken + '">Click Here to Verify Your Account</a>'
             };
 
             transporter.sendMail(mailOptions, function(error, response) {
+                  if(error){
+                    next(error);
+                  }
                   console.log('Message sent: ' + response);
+                  done();
             });
         });
 
@@ -80,15 +88,18 @@ router.post('/register', function(req, res){
     }); 
 });
 
-router.get('/email-verification', function(req, res) {
-    res.status(200).send('Verify email!');
-  });
-
 router.get('/verify', function(req, res) {
-      User.verifyEmail(req.query.authToken, function(err, existingAuthToken) {
-        if(err) console.log('err:', err);
-
-        res.status(200).send('Email successfully verified!');
+      User.findOne({tempToken: req.query.authToken}, function(err, user){
+        if(err){
+          next(err);
+        }
+        if(!user.isVerified){
+          user.isVerified = true;
+          user.save();
+          res.redirect(303, 'https://localhost:3443/#!/?token=' + req.query.authToken + '&user=' + user.username + '&_id=' + user._id + '&isVerified=' + user.isVerified);
+        }else{
+          res.status(201).json('Already verified. Log in to continue');
+        }
       });
   });
 
@@ -121,7 +132,8 @@ router.post('/login', function(req, res, next){
                success: true,
                token: token,
                admin: user.admin,
-               _id: user._id
+               _id: user._id,
+               isVerified: user.isVerified
            });
        });
    })(req, res, next); //on success req.user contains the authenticated user
@@ -155,12 +167,90 @@ router.get('/facebook/callback', function(req, res, next){
                     err: 'Could not log in user'
                 });
             }
-
+            user.isVerified = true;
             var token = Verify.getToken({"username":user.username, "_id":user._id, "admin":user.admin});
 
-            res.redirect(303, 'https://localhost:3443/#!/?token=' + token + '&user=' + user.username + '&_id=' + user._id);
+            res.redirect(303, 'https://localhost:3443/#!/?token=' + token + '&user=' + user.username + '&_id=' + user._id + '&isVerified=' + user.isVerified);
         });
     })(req, res, next);
+});
+
+router.route('/unverified')
+.delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next){
+  var twentyFourHoursOld = new Date()
+  twentyFourHoursOld.setHours(twentyFourHoursOld.getHours()-24)
+  User.remove({timestamp: {$lt:twentyFourHoursOld}}, function(err, result) {
+      if(err){
+        next(err);
+      }
+      res.json(result);
+  })
+});
+
+router.route('/forgotpassword')
+.post(function(req, res, next){
+  User.findOne({email: req.body.email}, function(err, user){
+    agenda.define('reset user password', {concurrency: 1}, function(job, done){
+      var transporter = nodemailer.createTransport({
+          service: 'SendGrid',
+          auth: { user: 'MANOJPATRA', pass: 'MAN#1991' }
+        });
+
+        var mailOptions = {
+          from: 'Manoj Patra 👻 <patra.manoj0@gmail.com>',
+          to: user.email,
+          subject: 'Reset Password ✔',
+          text: 'Hello ' + user.username,
+          html: '<p>Hello ' + user.username + '<br> Greetings from watchHours.' + 
+                'Click on the link below to reset your password.</p>' 
+                + '<a href="https://localhost:3443/#!/resetpassword?authToken=' + 
+                user.tempToken + '">Click Here to Verify Your Account</a>'
+        };
+
+        transporter.sendMail(mailOptions, function(error, response) {
+              if(error){
+                next(error);
+              }
+              console.log('Message sent: ' + response);
+        });
+    });
+
+    agenda.on('start', function(job) {
+      console.log("Job %s starting", job.attrs.name);
+    });
+
+    agenda.on('complete', function(job) {
+      console.log("Job %s finished", job.attrs.name);
+    });
+    if(err){
+      return res.status(500).json({
+                    err: "Can't find that email, sorry."
+                });
+    }
+    if(user){
+        agenda.start();
+        agenda.schedule('now', 'reset user password');
+
+        return res.status(200).json({
+                    res: "Email sent."
+                });
+    }
+  });
+});
+
+router.route('/resetpassword')
+.put(function(req, res, next){
+    User.findOne({tempToken: req.query.authToken}, function(err, user){
+      if(err){
+        next(err);
+      }
+      if(user){
+        user.setPassword(req.body.password, function(){
+          user.save();
+          res.status(200).json({message: 'Password changed successfully. Continue to login.'});
+        });
+      }
+    });
 });
 
 module.exports = router;

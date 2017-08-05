@@ -27,7 +27,17 @@ var User = new Schema({
     admin: {
         type: Boolean,
         default: false
+    }, 
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    tempToken: {
+        type: String
     }
+},
+{
+   timestamps: true
 });
 
 //User instance method

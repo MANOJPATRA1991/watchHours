@@ -14,6 +14,8 @@ var Verify = require('./verify');
 var episodeRouter = express.Router();
 
 episodeRouter.use(bodyParser.json());
+
+
 var BASE_IMAGE_URL = "https://thetvdb.com/banners/";
 
 episodeRouter.route('/:seriesId')
@@ -23,8 +25,10 @@ episodeRouter.route('/:seriesId')
         var episodes = [];
         if (seriesId) {
             // find all episodes for a particular series id
+            // exclued episodes with airedSeason equals 0
             // sort first by season, then by episode
-            episodes = Episode.find().where({seriesId: seriesId}).sort('airedSeason airedEpisodeNumber'); 
+            episodes = Episode.find().where({seriesId: seriesId,
+                                    airedSeason: {$gte: 0}}).sort('airedSeason airedEpisodeNumber'); 
         }
 
         // execute the query episodes.find()

@@ -1,7 +1,13 @@
 <div class="container">
     <div class="row">
-        <div class="poster" ng-repeat="poster in posters track by $index">
-            <a href="{{poster.poster}}" data-lightbox="{{show.seriesName}}" data-title="{{show.seriesName}}"><img src="{{poster.poster}}" alt="Image#{{$index}}"></a>
+        <div class="col-xs-12" align="center">
+        	<div class="poster" ng-repeat="poster in posters | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit track by $index">
+            	<a href="{{poster.poster}}" data-lightbox="{{show.seriesName}}" data-title="{{show.seriesName}}"><img src="{{poster.poster}}" alt="Image#{{$index}}"></a>
+        	</div>
         </div>
     </div>
+
+    <div class="text-center">
+      <ul uib-pagination boundary-links="true" max-size="noOfPages" total-items="totalItems" items-per-page="entryLimit" ng-model="currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+  </div>
 </div>

@@ -53,6 +53,10 @@ div.checkbox{
   text-align:justify;
 }
 
+h1{
+  margin-bottom: 30px;
+}
+
 div.col-md-4.search-nav{
   float:left;
   height:100%;
@@ -575,4 +579,12 @@ ul.alphabet, ul.genres{
 .quote {
   color: gray;
   font-size: 0.7em;
+}
+
+#facebook {
+   background-color: #3b5998;
+}
+
+#google {
+  background-color: #4285F4;
 }
