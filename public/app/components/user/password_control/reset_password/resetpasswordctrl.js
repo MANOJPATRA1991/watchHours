@@ -44,4 +44,13 @@ angular.module('watchHoursApp')
                 ];
             }
         };
+
+        /**
+         * Close alert box as mentioned by index
+         *
+         * @param(Number) index - The index of the alert to remove from alerts array
+         */
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        };
     }]);

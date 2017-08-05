@@ -2,6 +2,7 @@ angular.module('watchHoursApp')
 .controller('EpisodeCtrl', ['$scope', '$state', '$stateParams', '$rootScope', 'Series', 'Episodes', 'commentFactory', function($scope, $state, $stateParams, $rootScope, Series, Episodes, commentFactory){
         $scope.show = {};
         $scope.episodes = [];
+        $scope.showEditForm = false;
         var sortBySeason = (function(a, b) {
             return parseFloat(a) - parseFloat(b);
         });
@@ -29,6 +30,10 @@ angular.module('watchHoursApp')
             comment: ""
         };
 
+        $scope.editcomment = {
+            comment: ""
+        }
+
         /**
          * Submit a comment on episode page of a show
          */
@@ -39,6 +44,26 @@ angular.module('watchHoursApp')
             $state.go($state.current, {}, {reload: true});
 
             $scope.commentForm.$setPristine();
+        };
+
+        /**
+         * Edit a comment on episode page of a 
+         * show if comment belongs to user
+         */
+        $scope.editComment = function(id, commentId) {
+            commentFactory.update({id: id, commentId: commentId}, $scope.editcomment);
+            
+            $state.go($state.current, {}, {reload: true});
+        };
+
+        /**
+         * Delete a comment on episode page of a 
+         * show if comment belongs to user
+         */
+        $scope.deleteComment = function(id, commentId) {
+            commentFactory.delete({id: id, commentId: commentId});
+            
+            $state.go($state.current, {}, {reload: true});
         };
 
         Episodes.query({seriesId: $stateParams.seriesId}, function(episodes){

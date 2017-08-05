@@ -11,30 +11,30 @@ var Episode = require('../models/episodes');
 
 var Verify = require('./verify');
 
-var episodeRouter = express.Router();
+const episodeRouter = express.Router();
 
 episodeRouter.use(bodyParser.json());
 
 
-var BASE_IMAGE_URL = "https://thetvdb.com/banners/";
+const BASE_IMAGE_URL = "https://thetvdb.com/banners/";
 
 episodeRouter.route('/:seriesId')
-    .get(function(req, res, next){
+    .get((req, res, next) => {
         // /?seriesId=
-        var seriesId = req.params.seriesId;
-        var episodes = [];
+        const seriesId = req.params.seriesId;
+        let episodes = [];
         if (seriesId) {
             // find all episodes for a particular series id
             // exclued episodes with airedSeason equals 0
             // sort first by season, then by episode
-            episodes = Episode.find().where({seriesId: seriesId,
+            episodes = Episode.find().where({seriesId,
                                     airedSeason: {$gte: 0}}).sort('airedSeason airedEpisodeNumber'); 
         }
 
         // execute the query episodes.find()
         episodes.find()
             .populate('comments.postedBy')
-            .exec(function(err, episodes) {
+            .exec((err, episodes) => {
             // if any error exist, move to the next middleware function
             if (err) next(err);
             // write result to the response as json
@@ -43,14 +43,14 @@ episodeRouter.route('/:seriesId')
     });
 
 episodeRouter.route('/')
-    .post(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
+    .post(Verify.verifyOrdinaryUser, Verify.verifyAdmin, (req, res, next) => {
         // the tmdb api key for my account
-        var apiKey = '5BB799C77561B167';
+        const apiKey = '5BB799C77561B167';
         
         // create a new TVDB instance
-        var tvdb = new TVDB(apiKey);
+        const tvdb = new TVDB(apiKey);
 
-        var seriesImdbId = req.body.IMDB;
+        const seriesImdbId = req.body.IMDB;
 
         // get series by IMDB ID
         tvdb.getSeriesByImdbId(seriesImdbId)
@@ -59,13 +59,13 @@ episodeRouter.route('/')
             // and search for series data from TVDB
             tvdb.getSeriesAllById(response[0].id)
             .then(response => {
-                var episodes = response.episodes;
+                const episodes = response.episodes;
                 // create new Episode objects
-                _.each(episodes, function(episode) {
+                _.each(episodes, episode => {
                     tvdb.getEpisodeById(episode.id)
                     .then(response => {
                         console.log(response.airedSeason, response.airedEpisodeNumber);
-                        var episode = new Episode({
+                        const episode = new Episode({
                             _id: response.id,
                             airedEpisodeNumber: response.airedEpisodeNumber,
                             airedSeason: response.airedSeason,
@@ -78,9 +78,9 @@ episodeRouter.route('/')
                             seriesId: response.seriesId,
                             writers: response.writers,
                             comments: []
-                        })
+                        });
 
-                        Episode.create(episode, function(err, newEpisode){
+                        Episode.create(episode, (err, newEpisode) => {
                             if(err){
                                 if (err) {
                                     if (err.code == 11000) {
@@ -91,7 +91,7 @@ episodeRouter.route('/')
                                 }
                             }
                             console.log('Episode created!');
-                            var id = newEpisode._id;
+                            const id = newEpisode._id;
                         });
                     })
                     .catch(error => {next(error);});
@@ -103,23 +103,23 @@ episodeRouter.route('/')
     });
 
 episodeRouter.route('/:episodeId/comments')
-    .get(function (req, res, next) {
+    .get((req, res, next) => {
         Episode.findById(req.params.episodeId)
             .populate('comments.postedBy')
-            .exec(function (err, episode) {
+            .exec((err, episode) => {
                 if (err) next(err);
                 res.json(episode.comments);
             });
     })
 
-    .post(Verify.verifyOrdinaryUser, function (req, res, next) {
-        Episode.findById(req.params.episodeId, function (err, episode) {
+    .post(Verify.verifyOrdinaryUser, (req, res, next) => {
+        Episode.findById(req.params.episodeId, (err, episode) => {
             if (err) next(err);
 
             req.body.postedBy = req.decoded._id;
 
             episode.comments.push(req.body);
-            episode.save(function (err, episode) {
+            episode.save((err, episode) => {
                 if (err) next(err);
                 console.log('Updated Comments!');
                 res.json(episode);
@@ -128,29 +128,39 @@ episodeRouter.route('/:episodeId/comments')
     });
 
 episodeRouter.route('/:episodeId/comments/:commentId')
-    .get(Verify.verifyOrdinaryUser, function (req, res, next) {
+    .get(Verify.verifyOrdinaryUser, (req, res, next) => {
         Episode.findById(req.params.episodeId)
             .populate('comments.postedBy')
-            .exec(function (err, episode) {
+            .exec((err, episode) => {
                 if (err) next(err);
                 res.json(episode.comments.id(req.params.commentId));
             });
     })
 
-    .put(Verify.verifyOrdinaryUser, function (req, res, next) {
+    .put(Verify.verifyOrdinaryUser, (req, res, next) => {
         // We delete the existing commment and insert the updated
         // comment as a new comment
-        Episode.findById(req.params.episodeId, function (err, episode) {
+        Episode.findById(req.params.episodeId, (err, episode) => {
             if (err) next(err);
             episode.comments.id(req.params.commentId).remove();
 
             req.body.postedBy = req.decoded._id;
 
             episode.comments.push(req.body);
-            episode.save(function (err, episode) {
+            episode.save((err, episode) => {
                 if (err) next(err);
-                console.log('Updated Comments!');
                 res.json(episode);
+            });
+        });
+    })
+
+    .delete(Verify.verifyOrdinaryUser, (req, res, next) => {
+        Episode.findById(req.params.episodeId, (err, episode) => {
+            if (err) next(err);
+            episode.comments.id(req.params.commentId).remove();
+            episode.save((err, resp) => {
+                if (err) next(err);
+                res.json(resp);
             });
         });
     });

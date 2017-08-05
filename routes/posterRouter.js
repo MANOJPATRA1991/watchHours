@@ -18,7 +18,7 @@ var BASE_IMAGE_URL = "https://thetvdb.com/banners/";
 posterRouter.route('/:seriesId')
     .get(function(req, res, next){
         // /?seriesId=
-        var seriesId = req.params   .seriesId;
+        var seriesId = req.params.seriesId;
         var posters = [];
         if (seriesId) {
             // find all posters for a particular series id

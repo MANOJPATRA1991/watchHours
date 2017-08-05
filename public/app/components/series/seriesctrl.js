@@ -124,11 +124,6 @@ angular.module('watchHoursApp')
                 }
                 $state.go("app.series",{},{reload: "app.series"});
             };
-
-            // $scope.range = function(){
-            //     var res = Math.max.apply(Math, $scope.show.episodes.map(function(o){return o.season;}));
-            //     return new Array(+res);
-            // };
         });
         
 

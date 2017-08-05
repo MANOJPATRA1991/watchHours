@@ -29,7 +29,8 @@
     "angular-touch": "^1.6.4",
     "lightbox2": "^2.9.0",
     "angular-formly": "^8.4.1",
-    "angular-formly-templates-bootstrap": "^6.3.2"
+    "angular-formly-templates-bootstrap": "^6.3.2",
+    "angular-cache": "^4.6.0"
   },
   "resolutions": {
     "bootstrap": "~3"

@@ -2,6 +2,7 @@ angular.module('watchHoursApp')
 .controller('RegistrationCtrl', ['$scope', '$state', '$localStorage', 'AuthFactory', function ($scope, $state, $localStorage, AuthFactory) {
 
         $scope.user = {};
+        $scope.alerts = [];
 
         // User fields for the registration form
         $scope.userFields = [
@@ -74,7 +75,9 @@ angular.module('watchHoursApp')
             }
         ];
 
-        // This function will perform registration for the user
+        /**
+         * Performs registration for a user
+         */
         $scope.doRegister = function() {
             // check for password match before registering a user
             if($scope.user.password === $scope.user.repeat_password){
@@ -95,5 +98,14 @@ angular.module('watchHoursApp')
                     { type: 'danger', msg: AuthFactory.Error() }
                 )];
             });
+        };
+
+        /**
+         * Close alert box as mentioned by index
+         *
+         * @param(Number) index - The index of the alert to remove from alerts array
+         */
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
         };
     }]);

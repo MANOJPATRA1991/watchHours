@@ -7,12 +7,11 @@ angular.module('watchHoursApp')
 /**
  *  This factory is used to perform GET request for all shows
  */
-.factory('Shows', ['$resource', 'baseURL', function($resource, baseURL){
+.factory('Shows', ['$cacheFactory', '$resource', 'baseURL', function($cacheFactory, $resource, baseURL){
         // empty reference array
         var Shows = $resource(baseURL + '/shows', {}, {
             query: {
                 method: 'GET',
-                cache: true,
                 isArray: true
             }
         });
@@ -23,12 +22,12 @@ angular.module('watchHoursApp')
 /**
  *  This factory is used to perform GET request for a particular show
  */
-.factory('Series', ['$resource', 'baseURL', function($resource, baseURL){
+.factory('Series', ['$cacheFactory', '$resource', 'baseURL', function($cacheFactory, $resource, baseURL){
         // empty reference object
         var Series = $resource(baseURL + '/shows/:id', {seriesId:'@id'}, {
            query: {
-               method: 'GET',
-               isArray: false
+                method: 'GET',
+                isArray: false
            }
         });
         return Series;
@@ -38,12 +37,11 @@ angular.module('watchHoursApp')
 /**
  *  This factory is used to perform GET request for episodes belonging to a particular show
  */
-.factory('Episodes', ['$resource', 'baseURL', function($resource, baseURL){
+.factory('Episodes', ['$cacheFactory', '$resource', 'baseURL', function($cacheFactory, $resource, baseURL){
         // empty reference array
         var Episodes = $resource(baseURL + '/episodes/:seriesId', {seriesId:'@seriesId'}, {
             query: {
                 method: 'GET',
-                cache: true,
                 isArray: true
             }
         });
@@ -54,7 +52,7 @@ angular.module('watchHoursApp')
 /**
  *  This factory is used to perform GET request for a posters belonging to a particular show
  */
-.factory('Posters', ['$resource', 'baseURL', function($resource, baseURL){
+.factory('Posters', ['$cacheFactory', '$resource', 'baseURL', function($cacheFactory, $resource, baseURL){
         // empty reference array
         var Posters = $resource(baseURL + '/posters/:seriesId', {seriesId:'@seriesId'}, {
             query: {
@@ -69,7 +67,7 @@ angular.module('watchHoursApp')
 /**
  *  This factory is used to perform GET request for actors of a particular show
  */
-.factory('Actors', ['$resource', 'baseURL', function($resource, baseURL){
+.factory('Actors', ['$cacheFactory', '$resource', 'baseURL', function($cacheFactory, $resource, baseURL){
     // empty reference array
     var Actors = $resource(baseURL + '/actors/:seriesId', {seriesId:'@seriesId'}, {
         query: {
