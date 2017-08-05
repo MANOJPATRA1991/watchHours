@@ -10,22 +10,22 @@ angular.module('watchHoursApp')
                 url: '/',
                 views: {
                     'header': {
-                        templateUrl: 'views/header.html',
+                        templateUrl: 'app/components/header/header.html',
                         controller: 'HeaderCtrl'
                     },
                     'content': {
-                        templateUrl: 'views/home.html',
+                        templateUrl: 'app/components/home/home.html',
                         controller: 'HomeCtrl'
                     },
                     'footer': {
-                        templateUrl: 'views/footer.html'
+                        templateUrl: 'footer.html'
                     }
                 }
             })
             .state('app.showsToday', {
                 views: {
                   'showday@app': {
-                      templateUrl: 'views/showstoday.html',
+                      templateUrl: 'app/components/home/showstoday.html',
                       controller: 'HomeCtrl'
                   }
                 }
@@ -33,7 +33,7 @@ angular.module('watchHoursApp')
             .state('app.showsThisWeek', {
                 views: {
                     'showday@app': {
-                        templateUrl: 'views/showsThisWeek.html',
+                        templateUrl: 'app/components/home/showsThisWeek.html',
                         controller: 'HomeCtrl'
                     }
                 }
@@ -41,7 +41,7 @@ angular.module('watchHoursApp')
             .state('app.showsTomorrow', {
                 views: {
                     'showday@app': {
-                        templateUrl: 'views/showsTomorrow.html',
+                        templateUrl: 'app/components/home/showsTomorrow.html',
                         controller: 'HomeCtrl'
                     }
                 }
@@ -54,7 +54,7 @@ angular.module('watchHoursApp')
                         template: ""
                     },
                     'content@': {
-                        templateUrl: 'views/login.html',
+                        templateUrl: 'app/components/user/login/login.html',
                         controller: 'LoginCtrl'
                     },
                     'footer@': {
@@ -70,7 +70,7 @@ angular.module('watchHoursApp')
                         template: ""
                     },
                     'content@': {
-                        templateUrl: 'views/register.html',
+                        templateUrl: 'app/components/user/registration/register.html',
                         controller: 'RegistrationCtrl'
                     },
                     'footer@': {
@@ -86,7 +86,7 @@ angular.module('watchHoursApp')
                         template: ""
                     },
                     'content@': {
-                        templateUrl: 'views/forgotpassword.html',
+                        templateUrl: 'app/components/user/password_control/forgot_password/forgotpassword.html',
                         controller: 'ForgotPasswordCtrl'
                     },
                     'footer@': {
@@ -102,7 +102,7 @@ angular.module('watchHoursApp')
                         template: ""
                     },
                     'content@': {
-                        templateUrl: 'views/resetpassword.html',
+                        templateUrl: 'app/components/user/password_control/reset_password/resetpassword.html',
                         controller: 'ResetPasswordCtrl'
                     },
                     'footer@': {
@@ -115,7 +115,7 @@ angular.module('watchHoursApp')
                 views: {
                     // Absolutely targets the 'content' view in the 'app' state
                     'content@': {
-                        templateUrl: 'views/search.html',
+                        templateUrl: 'app/components/search/search.html',
                         controller: 'SearchCtrl'
                     }
                 }
@@ -125,15 +125,15 @@ angular.module('watchHoursApp')
                 views: {
                     // Absolutely targets the 'content' view in the 'app' state
                     'content@': {
-                        templateUrl: 'views/series.html',
+                        templateUrl: 'app/components/series/series.html',
                         controller: 'SeriesCtrl'
                     },
                     // Absolutely targets the 'fan_arts' view in the 'app.series' state
                     'fan_arts@app.series': {
-                        templateUrl: 'views/poster.html'
+                        templateUrl: 'app/components/series/poster.html'
                     },
                     'actors@app.series': {
-                        templateUrl: 'views/actors.html'
+                        templateUrl: 'app/components/series/actors.html'
                     }
                 }
             })
@@ -142,7 +142,7 @@ angular.module('watchHoursApp')
                 views: {
                     // Absolutely targets the 'content' view in the 'app' state
                     'content@': {
-                        templateUrl: 'views/episode.html',
+                        templateUrl: 'app/components/episodes/episode.html',
                         controller: 'EpisodeCtrl'
                     }
                 }
@@ -153,7 +153,7 @@ angular.module('watchHoursApp')
                 views: {
                     // Absolutely targets the 'content' view in the 'app' state
                     'content@': {
-                        templateUrl: 'views/user.html',
+                        templateUrl: 'app/components/user/user_manage/user.html',
                         controller: 'UserCtrl'
                     }
                 }
@@ -165,7 +165,6 @@ angular.module('watchHoursApp')
 .run(function($rootScope, $location, $state, AuthFactory){
         if($location.search().user){
             AuthFactory.storeCredentials({username: $location.search().user, token: $location.search().token, _id: $location.search()._id});
-            //$state.go('app', {param: value}, {notify: false});
             $state.go("app",{},{reload: "app"});
             $rootScope.currentUser = true;
             $rootScope.$broadcast('login:Successful');
