@@ -1,0 +1,144 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12" align="center">
+                    <h1>{{show.seriesName}}</h1>
+                    <h4>Episodes List</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6" align="center">
+            <form>
+                <div class="form-group">
+                    <label for="sel1">Select season:</label>
+                    <select class="form-control" id="sel1" ng-model="season" ng-options="season for season in seasons | orderBy: '-valueOf()'" ng-change="changeStateSeason(season)">
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6" align="center">
+            <form>
+                <div class="form-group">
+                    <label for="sel2">Select year:</label>
+                    <select class="form-control" id="sel2" ng-model="year" ng-options="year for year in firstAired | orderBy:'-toString()'" ng-change="changeStateYear(year)">
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container episode-container">
+    <div class="row">
+        <div class="col-md-12" align="center">
+            <ul uib-pager total-items="totalItems" ng-model="currentPage" items-per-page="itemsPerPage"></ul>
+        </div>
+        <div class="col-md-12" ng-repeat="episode in episodes.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))">
+            <div class="row episode-row">
+                <div class="col-md-6 episode-column-img">
+                    <img class="episode-img" src="{{episode.episodeImage}}" alt="{{episode.episodeName}}">
+                </div>
+                <div class="col-md-6 episode-column">
+                    <h2><b>{{episode.episodeName}}</b></h2>
+                    <p><b>Season {{episode.airedSeason}}, Episode {{episode.airedEpisodeNumber}}</b></p>
+                    <p class="episode-info"><i class="fa fa-calendar" aria-hidden="true"></i><span>{{episode.firstAired | date: 'MMM d, y'}}</span></p>
+                    <br>
+                    <p class="episode-info"><b>Director</b><br/> <span class="creators">{{episode.director}}</span></p>
+                    <p class="episode-info"><b>Writers</b><br/> <span class="creators" ng-repeat="writer in episode.writers track by $index">{{writer}} </span></p>
+                </div>
+                <div class="col-md-12">
+                    <p class="overview">{{episode.overview}}</p>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <uib-tabset active="active">
+                            <uib-tab index="0" heading="Discussions">
+                                <div class="col-xs-12 col-md-9 col-md-offset-1">
+                                    <form class="form-horizontal" name="commentForm" ng-submit="submitComment(episode._id)" novalidate>
+                                        <div class="form-group"  ng-class="{ 'has-error' : commentForm.comments.$error.required && !commentForm.comments.$pristine }">
+                                            <label for="comments" class="control-label">Share your views</label>
+                                            <div>
+                                                <textarea ng-disabled="!currentUser" class="form-control" rows="3" name="comments"
+                                                          ng-model="mycomment.comment" required>
+                                                </textarea>
+                                                <span ng-show="commentForm.comments.$error.required && !commentForm.comments.$pristine" class="help-block">Your comments are required.</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div>
+                                                <button type="submit" class="btn btn-primary" ng-hide="!currentUser" ng-disabled="commentForm.$invalid">Submit Comment</button>
+                                                <a ui-sref="app.login" type="submit" class="btn btn-primary" ng-hide="currentUser">Log in to Post a Comment</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <ul class="list-unstyled" ng-show="commentForm.$valid && !commentForm.$pristine">
+                                        <li>
+                                            <blockquote>
+                                                <p>{{mycomment.comment}}</p>
+                                            </blockquote>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-xs-12 col-md-9 col-md-offset-1">
+                                    <h4>Audience Reviews</h4>
+                                </div>
+                                <div class="col-xs-12 col-md-9 col-md-offset-1">
+                                    <h6>Sort by: &nbsp;
+                                            <select ng-init="orderText='createdAt'" ng-model="orderText">
+                                                <option value="createdAt">Date</option>
+                                                <option value="comment">Comment</option>
+                                                <option value="postedBy">Name</option>
+                                            </select>
+                                            <select ng-model="rev">
+                                                <option value="">Ascending</option>
+                                                <option value="reverse">Descending</option>
+                                            </select>
+                                    </h6>
+                                </div>
+                                <div class="col-xs-12 col-md-9 col-md-offset-1">
+                                    <ul class="list-unstyled">
+                                        <li ng-repeat="comment in episode.comments | orderBy:orderText:rev">
+                                            <form ng-show="showEditForm" class="form-horizontal" name="commentForm" ng-submit="editComment(episode._id, comment._id)" novalidate>
+                                                <div class="form-group" ng-class="{ 'has-error' : commentForm.comments.$error.required && !commentForm.comments.$pristine }">
+                                                    <label for="comments" class="control-label">Edit Comment</label>
+                                                    <div>
+                                                        <textarea ng-disabled="!currentUser" class="form-control" rows="3" name="comments"
+                                                                  ng-model="editcomment.comment" required>
+                                                        </textarea>
+                                                        <span ng-show="commentForm.comments.$error.required && !commentForm.comments.$pristine" class="help-block">Cannot post blank comment.</span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div>
+                                                        <button type="submit" class="btn btn-primary" ng-hide="!currentUser" ng-disabled="commentForm.$invalid">Edit Comment</button>
+                                                        <a class="btn btn-primary" ng-click="showEditForm = !showEditForm">Cancel</a>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <em>{{comment.postedBy.username}}, posted on {{comment.updatedAt | date:'MMM, dd, yyyy'}}</em>
+                                                    <span style="float: right;" ng-if="username == comment.postedBy.username" ng-click="deleteComment(episode._id, comment._id)"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                                    <span style="float: right; margin-right: 1em;" ng-click="showEditForm = !showEditForm"  ng-show="username == comment.postedBy.username" ><i class="fa fa-pencil" aria-hidden="true"></i></span>
+                                                </div>
+                                                <div class="panel-body">
+                                                    {{comment.comment}}
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </uib-tab>
+                        </uib-tabset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

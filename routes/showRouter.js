@@ -15,6 +15,54 @@ var showRouter = express.Router();
 showRouter.use(bodyParser.json());
 var BASE_IMAGE_URL = "https://thetvdb.com/banners/";
 
+var agenda = require('agenda')({ db: { address: 'mongodb://MANOJ_PATRA:MAN#1991@ds145138.mlab.com:45138/watchours' } });
+var sugar = require('sugar');
+var nodemailer = require('nodemailer');
+
+agenda.define('send email show alert', function(job, done) {
+  Show.findOne({ name: job.attrs.data }).populate('subscribers').exec(function(err, show) {
+    var emails = show.subscribers.map(function(user) {
+        return user.email;
+    });
+    var episodes = Episode.find().where({seriesId: show._id}).sort('airedSeason airedEpisodeNumber'); 
+
+    var upcomingEpisode = episodes.filter(function(episode) {
+      return new Date(episode.firstAired) > new Date();
+    })[0];
+
+    var transporter = nodemailer.createTransport({
+      service: 'SendGrid',
+      auth: { user: 'MANOJPATRA', pass: 'MAN#1991' }
+    });
+
+    var mailOptions = {
+      from: 'Manoj Patra 👻 <patra.manoj0@gmail.com>',
+      to: emails.join(','),
+      subject: show.seriesName + ' is starting soon!',
+      text: show.seriesName + ' starts in less than 2 hours on ' + show.network + '.\n\n' +
+      'Episode ' + upcomingEpisode.airedEpisodeNumber + ' Overview\n\n' + upcomingEpisode.overview
+    };
+
+    transporter.sendMail(mailOptions, function(error, response) {
+        if(error){
+            next(error);
+          }
+        console.log('Message sent: ' + response.message);
+        done();
+    });
+  });
+});
+
+//agenda.start();
+
+agenda.on('start', function(job) {
+  console.log("Job %s starting", job.attrs.name);
+});
+
+agenda.on('complete', function(job) {
+  console.log("Job %s finished", job.attrs.name);
+});
+
 showRouter.route('/')
     .get(function(req, res, next){
         // save a reference to all the docs in Show database
@@ -94,6 +142,8 @@ showRouter.route('/')
                                     return res.status(409).end('Show already exists!');
                                 }
                                 next(err);
+                                var alertDate = Sugar.Date.create('Next ' + show.airsDayOfWeek + ' at ' + show.airsTime).rewind({ hour: 2});
+                                agenda.schedule(alertDate, 'send email show alert', show.seriesName).repeatEvery('1 week');
                             }
                         }
                         console.log('Show created!');

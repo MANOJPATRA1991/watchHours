@@ -1,0 +1,61 @@
+angular.module('watchHoursApp')
+    .controller('HomeCtrl', ['$scope', 'Shows', 'Episodes', 'HomeServices', function($scope, Shows, Episodes, HomeServices){
+        $scope.todaysepisodes = [];
+        $scope.tomorrowsepisodes = [];
+        $scope.thisweeksepisodes = [];
+        $scope.shows = [];
+
+        $scope.alerts = [
+            { 
+                type: 'danger', 
+                msg: 'Please verify your account within 24 hours of registration in order to avoid deactivation.' }
+        ];
+
+        Shows.query({}, function(resp){
+            // Sort shows by rating
+            $scope.shows = resp.sort(HomeServices.compare);
+
+            // Get episodes for each show
+            for(var i=0; i<$scope.shows.length; i++){
+                Episodes.query({seriesId: $scope.shows[i]._id}, function(episodes) {
+                    for(var i = 0; i < episodes.length; i++){
+
+                        // Filter episodes for today
+                        if (HomeServices.isToday(moment(episodes[i].firstAired))) {
+                            $scope.todaysepisodes.push(episodes[i]);
+                        
+                        // Filter episodes for tomorrow
+                        } else if (HomeServices.isTomorrow(moment(episodes[i].firstAired))) {
+                            $scope.tomorrowsepisodes.push(episodes[i]);
+                        
+                        // Filter episodes for this week
+                        } else if (HomeServices.isWithinAWeek(moment(episodes[i].firstAired))) {
+                            $scope.thisweeksepisodes.push(episodes[i]);
+                        }
+                    }
+                });
+            }
+
+            /**
+             * Get show based on show id
+             *
+             * @param(Number) id - The show's id
+             */
+            $scope.showName = function(id){
+                for( var i=0; i<$scope.shows.length; i++){
+                    if($scope.shows[i]._id === id){
+                        return $scope.shows[i];
+                    }
+                }
+            };
+        });
+
+        /**
+         * Close alert box as mentioned by index
+         *
+         * @param(Number) index - The index of the alert to remove from alerts array
+         */
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        };
+    }]);

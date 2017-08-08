@@ -1,6 +1,6 @@
 module.exports = {
     'secretKey': '12345-67890-09876-54321',
-    'mongoUrl': 'mongodb://localhost:27017/watchHours',
+    'mongoUrl': 'mongodb://MANOJ_PATRA:MAN#1991@ds145138.mlab.com:45138/watchours',
     'facebook': {
         //App ID
         clientID: '496648813792811',

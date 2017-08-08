@@ -1,0 +1,23 @@
+<div class="col-md-12" align="center" ng-cloak ng-if="todaysepisodes.length == 0">
+    <h4>No Shows for Today!!</h4>
+</div>
+
+<div class="col-xsl-6 col-xs-12 col-sm-6 col-md-4" align="center" ng-repeat="episode in todaysepisodes">
+
+    <div class="thumbnail">
+        <img src="{{showName(episode.seriesId).poster}}" alt="{{showName(episode.seriesId).seriesName}}">
+        <div class="clearfix"></div>
+        <div class="caption">
+            <p class="title">
+                <a class="title" ui-sref="app.series({seriesId: showName(episode.seriesId)._id})" title="{{showName(episode.seriesId).seriesName}}">{{showName(episode.seriesId).seriesName}}</a>
+            </p>
+            <p class="info"><b>{{showName(episode.seriesId).network}}</b> <span class="rating"><i class="fa fa-star fa-lg star" aria-hidden="true"></i>  {{showName(episode.seriesId).rating}}</span></p>
+            <p class="epi">S{{episode.airedSeason}}, E{{episode.airedEpisodeNumber}}</p>
+            <p class="info"><i class="fa fa-calendar" aria-hidden="true"></i>  {{episode.firstAired | date: 'MMM d, y'}}</p>
+            <div class="cap">
+                <span><b>{{showName(episode.seriesId).airsDayOfWeek}}</b></span>
+                <span><b>{{showName(episode.seriesId).airsTime}}</b></span>
+            </div>
+        </div>
+    </div>
+</div>
