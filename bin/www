@@ -15,6 +15,7 @@ var fs = require('fs');
  */
 
 var port = normalizePort(process.env.PORT || '3000');
+app.set("host", process.env.HOST || "localhost");
 app.set('port', port);
 
 /**
