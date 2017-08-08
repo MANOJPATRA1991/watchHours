@@ -21,18 +21,20 @@
     <div class="col-xsl-6 col-xs-12" ng-if="(shows | subscribers).length == 0">
       <p>You don't have any subscriptions. Visit show pages to subscribe to shows.</p>
     </div>
-    <div class="col-xsl-6 col-xs-12 col-sm-6 col-md-4" ng-repeat="show in shows | subscribers | limitTo: 12">
-      <div class="thumbnail">
-        <img src="{{show.poster}}" alt="{{show.seriesName}}">
-        <div class="clearfix"></div>
-        <div class="caption">
-          <p class="title">
-            <a class="title" ui-sref="app.series({seriesId: show._id})" title="{{show.seriesName}}"><b>{{show.seriesName}}</b></a>
-          </p>
-          <p class="info"><b>{{show.network}}</b> <span class="rating"><i class="fa fa-star fa-lg star" aria-hidden="true"></i>  {{show.rating}}</span></p>
-          <p class="info"><i class="fa fa-calendar" aria-hidden="true"></i>  {{show.firstAired | date: 'yyyy'}}</p>
-          <div class="cap">
-            <span ng-repeat="genre in show.genre"><b>{{genre}}</b></span>
+    <div class="col-xs-12 scroll pre-scrollable">
+      <div class="col-xsl-6 col-xs-12 col-sm-6 col-md-4" ng-repeat="show in shows | subscribers | limitTo: 12">
+        <div class="thumbnail">
+          <img src="{{show.poster}}" alt="{{show.seriesName}}">
+          <div class="clearfix"></div>
+          <div class="caption">
+            <p class="title">
+              <a class="title" ui-sref="app.series({seriesId: show._id})" title="{{show.seriesName}}"><b>{{show.seriesName}}</b></a>
+            </p>
+            <p class="info"><b>{{show.network}}</b> <span class="rating"><i class="fa fa-star fa-lg star" aria-hidden="true"></i>  {{show.rating}}</span></p>
+            <p class="info"><i class="fa fa-calendar" aria-hidden="true"></i>  {{show.firstAired | date: 'yyyy'}}</p>
+            <div class="cap">
+              <span ng-repeat="genre in show.genre"><b>{{genre}}</b></span>
+            </div>
           </div>
         </div>
       </div>
@@ -48,18 +50,20 @@
     <div class="col-xsl-6 col-xs-12" ng-if="(shows | watchList).length == 0">
       <p>You don't have any shows in your watch list. To add shows to your watch list, visit show pages.</p>
     </div>
-    <div class="col-xsl-6 col-xs-12 col-sm-6 col-md-4" ng-repeat="show in shows | watchList | limitTo: 12">
-      <div class="thumbnail">
-        <img src="{{show.poster}}" alt="{{show.seriesName}}">
-        <div class="clearfix"></div>
-        <div class="caption">
-          <p class="title">
-            <a class="title" ui-sref="app.series({seriesId: show._id})" title="{{show.seriesName}}"><b>{{show.seriesName}}</b></a>
-          </p>
-          <p class="info"><b>{{show.network}}</b> <span class="rating"><i class="fa fa-star fa-lg star" aria-hidden="true"></i>  {{show.rating}}</span></p>
-          <p class="info"><i class="fa fa-calendar" aria-hidden="true"></i>  {{show.firstAired | date: 'yyyy'}}</p>
-          <div class="cap">
-            <span ng-repeat="genre in show.genre"><b>{{genre}}</b></span>
+    <div class="col-xs-12 scroll pre-scrollable">
+      <div class="col-xsl-6 col-xs-12 col-sm-6 col-md-4" ng-repeat="show in shows | watchList | limitTo: 12">
+        <div class="thumbnail">
+          <img src="{{show.poster}}" alt="{{show.seriesName}}">
+          <div class="clearfix"></div>
+          <div class="caption">
+            <p class="title">
+              <a class="title" ui-sref="app.series({seriesId: show._id})" title="{{show.seriesName}}"><b>{{show.seriesName}}</b></a>
+            </p>
+            <p class="info"><b>{{show.network}}</b> <span class="rating"><i class="fa fa-star fa-lg star" aria-hidden="true"></i>  {{show.rating}}</span></p>
+            <p class="info"><i class="fa fa-calendar" aria-hidden="true"></i>  {{show.firstAired | date: 'yyyy'}}</p>
+            <div class="cap">
+              <span ng-repeat="genre in show.genre"><b>{{genre}}</b></span>
+            </div>
           </div>
         </div>
       </div>
@@ -75,21 +79,25 @@
     <div class="col-xsl-6 col-xs-12" ng-if="(shows | favorites).length == 0">
       <p>You don't have any shows in your favorites list. To list shows as favorites, visit show pages.</p>
     </div>
-    <div class="col-xsl-6 col-xs-12 col-sm-6 col-md-4" ng-repeat="show in shows | favorites | limitTo: 12" index="$index">
-      <div class="thumbnail">
-        <img src="{{show.poster}}" alt="{{show.seriesName}}">
-        <div class="clearfix"></div>
-        <div class="caption">
-          <p class="title">
-            <a class="title" ui-sref="app.series({seriesId: show._id})" title="{{show.seriesName}}"><b>{{show.seriesName}}</b></a>
-          </p>
-          <p class="info"><b>{{show.network}}</b> <span class="rating"><i class="fa fa-star fa-lg star" aria-hidden="true"></i>  {{show.rating}}</span></p>
-          <p class="info"><i class="fa fa-calendar" aria-hidden="true"></i>  {{show.firstAired | date: 'yyyy'}}</p>
-          <div class="cap">
-            <span ng-repeat="genre in show.genre"><b>{{genre}}</b></span>
+    <div class="col-xs-12 scroll pre-scrollable">
+      <div class="col-xsl-6 col-xs-12 col-sm-6 col-md-4" ng-repeat="show in shows | favorites">
+        <div class="thumbnail">
+          <img src="{{show.poster}}" alt="{{show.seriesName}}">
+          <div class="clearfix"></div>
+          <div class="caption">
+            <p class="title">
+              <a class="title" ui-sref="app.series({seriesId: show._id})" title="{{show.seriesName}}"><b>{{show.seriesName}}</b></a>
+            </p>
+            <p class="info"><b>{{show.network}}</b> <span class="rating"><i class="fa fa-star fa-lg star" aria-hidden="true"></i>  {{show.rating}}</span></p>
+            <p class="info"><i class="fa fa-calendar" aria-hidden="true"></i>  {{show.firstAired | date: 'yyyy'}}</p>
+            <div class="cap">
+              <span ng-repeat="genre in show.genre"><b>{{genre}}</b></span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+

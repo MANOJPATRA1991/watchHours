@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>watchHOURS</title>
     <link rel="stylesheet" href="assets/bower_components/bootstrap/css/bootstrap.min.css">
-    <!--<link rel="stylesheet" href="bower_components/bootstrap-material-design/scss/bootstrap-material-design.scss">-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cookie">
     <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="assets/styles/styles.css">
@@ -23,26 +22,6 @@
 
     <div ui-view="footer"></div>
 
-    <div id="fb-root"></div>
-    <script>
-        window.fbAsyncInit = function() {
-            FB.init({
-                appId            : '496648813792811',
-                autoLogAppEvents : true,
-                xfbml            : true,
-                version          : 'v2.10'
-            });
-        };
-        (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.10&appId=367101060293995";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-    </script>
-
-    <!--<script src="assets/js/jquery.min.js"></script>-->
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="assets/bower_components/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/bower_components/api-check/dist/api-check.min.js"></script>
@@ -61,7 +40,6 @@
     <script src="app/app.route.js"></script>
     <script src="app/shared/services.js"></script>
     <script src="app/shared/filters.js"></script>
-    <!-- <script src="app/directives.js"></script> -->
     <script src="app/components/episodes/episodectrl.js"></script>
     <script src="app/components/header/headerctrl.js"></script>
     <script src="app/components/home/homectrl.js"></script>
@@ -72,12 +50,6 @@
     <script src="app/components/user/password_control/forgot_password/forgotpasswordctrl.js"></script>
     <script src="app/components/user/password_control/reset_password/resetpasswordctrl.js"></script>
     <script src="app/components/user/registration/registrationctrl.js"></script>
-    <script type="text/javascript">
-        $('.carousel[data-type="multi"] .item').each(function(){
-  var next = $(this).next();
-  if (!next.length) {
-    next = $(this).siblings(':first');
-    </script>
 </body>
 
 </html>

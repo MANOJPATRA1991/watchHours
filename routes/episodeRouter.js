@@ -102,6 +102,57 @@ episodeRouter.route('/')
         .catch(error => {next(error);});
     });
 
+episodeRouter.route('/')
+    .put(Verify.verifyOrdinaryUser, Verify.verifyAdmin, (req, res, next) => {
+        // the tmdb api key for my account
+        const apiKey = '5BB799C77561B167';
+        
+        // create a new TVDB instance
+        const tvdb = new TVDB(apiKey);
+
+        const seriesImdbId = req.body.IMDB;
+
+        // get series by IMDB ID
+        tvdb.getSeriesByImdbId(seriesImdbId)
+        .then(response => {
+            // retrieve series id from the returned data
+            // and search for series data from TVDB
+            tvdb.getSeriesAllById(response[0].id)
+            .then(response => {
+                const episodes = response.episodes;
+                // create new Episode objects
+                _.each(episodes, episode => {
+                    tvdb.getEpisodeById(episode.id)
+                    .then(response => {
+                        console.log(response.airedSeason, response.airedEpisodeNumber);
+                        Episode.findById(response.id, (err, episode) => {
+                            if(err) next(err);
+                            
+                            episode.airedEpisodeNumber = response.airedEpisodeNumber,
+                            episode.airedSeason = response.airedSeason,
+                            episode.director = response.director,
+                            episode.episodeName = response.episodeName,
+                            episode.episodeImage = BASE_IMAGE_URL + response.filename,
+                            episode.firstAired = response.firstAired,
+                            episode.guestStars = response.guestStars,
+                            episode.overview = response.overview,
+                            episode.seriesId = response.seriesId,
+                            episode.writers = response.writers
+
+                            episode.save((err, episode) => {
+                                if (err) next(err);
+                                console.log('Updated Episode ' + episode._id + '!');
+                            });
+                        });
+                    })
+                    .catch(error => {next(error);});
+                });
+            })
+            .catch(error => {next(error);})
+            })
+        .catch(error => {next(error);});
+    });
+
 episodeRouter.route('/:episodeId/comments')
     .get((req, res, next) => {
         Episode.findById(req.params.episodeId)

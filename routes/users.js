@@ -9,7 +9,7 @@ var bodyParser = require('body-parser');
 
 var User = require('../models/users');
 var Verify = require('./verify');
-var agenda = require('agenda')({ db: { address: 'localhost:27017/watchHours' } });
+var agenda = require('agenda')({ db: { address: 'mongodb://localhost:27017/watchHours' } });
 var sugar = require('sugar');
 var nodemailer = require('nodemailer');
 

@@ -15,7 +15,7 @@ var showRouter = express.Router();
 showRouter.use(bodyParser.json());
 var BASE_IMAGE_URL = "https://thetvdb.com/banners/";
 
-var agenda = require('agenda')({ db: { address: 'localhost:27017/watchHours' } });
+var agenda = require('agenda')({ db: { address: 'mongodb://localhost:27017/watchHours' } });
 var sugar = require('sugar');
 var nodemailer = require('nodemailer');
 
