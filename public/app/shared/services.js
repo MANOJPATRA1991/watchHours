@@ -1,7 +1,7 @@
 angular.module('watchHoursApp')
 
 /** This is the BASE URL for the application. */
-.constant("baseURL", "https://watch-hours.herokuapp.com/")
+.constant("baseURL", "https://localhost:3443")
 
 
 /**
