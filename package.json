@@ -7,10 +7,11 @@
   "author": "Manoj Patra",
   "license": "ISC",
   "engines": {
-    "node": "4.1.1"
+    "node": "6.9.1"
   },
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "postinstall": "bower install"
   },
   "keywords": [
     "watchhours",
