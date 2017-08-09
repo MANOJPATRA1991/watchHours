@@ -57,7 +57,7 @@ router.post('/register', function(req, res){
               text: 'Hello ' + user.username,
               html: '<p>Hello ' + user.username + '<br> Greetings from watchHours' + 
               'Click on the link below to verify email address.</p>' 
-                    + '<a href="https://localhost:3443/users/verify?authToken=' + 
+                    + '<a href="https://watch-hours.herokuapp.com/users/verify?authToken=' + 
                     user.tempToken + '">Click Here to Verify Your Account</a>'
             };
 
@@ -96,7 +96,7 @@ router.get('/verify', function(req, res) {
         if(!user.isVerified){
           user.isVerified = true;
           user.save();
-          res.redirect(303, 'https://localhost:3443/#!/?token=' + req.query.authToken + '&user=' + user.username + '&_id=' + user._id + '&isVerified=' + user.isVerified);
+          res.redirect(303, 'https://watch-hours.herokuapp.com/#!/?token=' + req.query.authToken + '&user=' + user.username + '&_id=' + user._id + '&isVerified=' + user.isVerified);
         }else{
           res.status(201).json('Already verified. Log in to continue');
         }
@@ -170,7 +170,7 @@ router.get('/facebook/callback', function(req, res, next){
             user.isVerified = true;
             var token = Verify.getToken({"username":user.username, "_id":user._id, "admin":user.admin});
 
-            res.redirect(303, 'https://localhost:3443/#!/?token=' + token + '&user=' + user.username + '&_id=' + user._id + '&isVerified=' + user.isVerified);
+            res.redirect(303, 'https://watch-hours.herokuapp.com/#!/?token=' + token + '&user=' + user.username + '&_id=' + user._id + '&isVerified=' + user.isVerified);
         });
     })(req, res, next);
 });
@@ -203,7 +203,7 @@ router.route('/forgotpassword')
           text: 'Hello ' + user.username,
           html: '<p>Hello ' + user.username + '<br> Greetings from watchHours.' + 
                 'Click on the link below to reset your password.</p>' 
-                + '<a href="https://localhost:3443/#!/resetpassword?authToken=' + 
+                + '<a href="https://watch-hours.herokuapp.com/#!/resetpassword?authToken=' + 
                 user.tempToken + '">Click Here to Verify Your Account</a>'
         };
 
