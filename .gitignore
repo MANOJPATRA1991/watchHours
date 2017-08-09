@@ -2,4 +2,3 @@ node_modules/
 .idea/
 .vscode/
 public/assets/bower_components/
-public/stylesheets/bootstrap/
