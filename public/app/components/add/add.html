@@ -1,0 +1,55 @@
+<div class="container">
+    <div class="row" style="z-index: 100; text-align: center; ng-if="add">
+        <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type)" close="closeAlert($index)">{{alert.msg}}</div>
+    </div>
+  <div class="flex-row">
+    <div class="col-md-12 text-center">
+      	<h1>Add Show</h1>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12" align="center">
+    <form class="form-horizontal" ng-submit="addShow(add.show)">
+		<div class="form-group ">
+			<input type="text" class="search-show form-control input-lg" aria-label="input" placeholder="Input show's IMDB ID to add show" ng-model="add.show">
+		</div>
+    <br>
+		<button type="submit" class="btn btn-primary" ng-disabled="!add.show">Add Show</button>
+  	</form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12" align="center">
+    <form class="form-horizontal" ng-submit="addEpisodes(add.show)">
+    <div class="form-group ">
+      <input type="text" class="search-show form-control input-lg" aria-label="input" placeholder="Input show's IMDB ID to add episodes" ng-model="add.show">
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary" ng-disabled="!add.show">Add Episodes</button>
+    </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12" align="center">
+    <form class="form-horizontal" ng-submit="addActors(add.show)">
+    <div class="form-group ">
+      <input type="text" class="search-show form-control input-lg" aria-label="input" placeholder="Input show's IMDB ID to add actors" ng-model="add.show">
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary" ng-disabled="!add.show">Add Actors</button>
+    </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12" align="center">
+    <form class="form-horizontal" ng-submit="addPosters(add.show)">
+    <div class="form-group ">
+      <input type="text" class="search-show form-control input-lg" aria-label="input" placeholder="Input show's IMDB ID to add posters" ng-model="add.show">
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary" ng-disabled="!add.show">Add Posters</button>
+    </form>
+    </div>
+  </div>
+</div>

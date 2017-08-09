@@ -10,6 +10,7 @@
         <li role="presentation"><a ui-sref="app.search">TV SHOWS</a></li>
       </ul>
       <ul class="nav navbar-nav right-nav">
+        <li role="presentation" ng-if="currentUser && admin == true"><a ui-sref="app.add"> <i class="fa fa-plus"></i></a></li>
         <li role="presentation" ng-if="currentUser"><a ui-sref="app.user({id: uid})"> {{username}}</a></li>
         <li role="presentation" ng-if="currentUser"><a ng-click="logout()"><i class="fa fa-sign-out"></i> LOG OUT</a></li>
         <li role="presentation" ng-if="!currentUser"><a ui-sref="app.login"><i class="fa fa-sign-in"></i> LOG IN </a></li>

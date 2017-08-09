@@ -20,6 +20,15 @@ angular.module('watchHoursApp')
                     }
                 }
             })
+            .state('app.add', {
+                url: 'add',
+                views: {
+                    'content@': {
+                        templateUrl: 'app/components/add/add.html',
+                        controller: 'AddCtrl'
+                    }
+                }
+            })
             .state('app.showsToday', {
                 views: {
                   'showday@app': {
