@@ -124,7 +124,6 @@ episodeRouter.route('/')
                 _.each(episodes, episode => {
                     tvdb.getEpisodeById(episode.id)
                     .then(response => {
-                        console.log(response.airedSeason, response.airedEpisodeNumber);
                         Episode.findById(response.id, (err, episode) => {
                             if(err) next(err);
                             
