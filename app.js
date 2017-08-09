@@ -39,7 +39,7 @@ app.all('*', function(req, res, next){
    if(req.secure){
        return next();
    };
-    res.redirect('https://'+req.hostname+':'+app.get('secPort')+req.url);
+    res.redirect('https://'+req.hostname+req.url);
 });
 
 
