@@ -8,7 +8,7 @@ angular.module('watchHoursApp')
          */
         $scope.addShow = function(id){
         	Shows.save({}, {IMDB: id},
-	        	function(){
+	        	function(resp){
 	        		$scope.add = true;
 		        	$scope.alerts = [(
 	                    { type: 'success', msg: "Show Added!" }
@@ -24,7 +24,7 @@ angular.module('watchHoursApp')
 
         $scope.addEpisodes = function(id){
         	Episodes.save({}, {IMDB: id},
-	        	function(){
+	        	function(resp){
 		        	$scope.alerts = [(
 	                    { type: 'success', msg: "Episodes Added!" }
 	                )];
@@ -39,7 +39,7 @@ angular.module('watchHoursApp')
 
         $scope.addActors = function(id){
         	Actors.save({}, {IMDB: id},
-	        	function(){
+	        	function(resp){
 		        	$scope.alerts = [(
 	                    { type: 'success', msg: "Actors Added!" }
 	                )];
@@ -54,7 +54,7 @@ angular.module('watchHoursApp')
 
         $scope.addPosters = function(id){
         	Posters.save({}, {IMDB: id},
-	        	function(){
+	        	function(resp){
 		        	$scope.alerts = [(
 	                    { type: 'success', msg: "Posters Added!" }
 	                )];
