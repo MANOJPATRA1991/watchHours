@@ -9,7 +9,7 @@ angular.module('watchHoursApp')
  */
 .factory('Shows', ['$cacheFactory', '$resource', 'baseURL', function($cacheFactory, $resource, baseURL){
         // empty reference array
-        var Shows = $resource(baseURL + '/shows', {}, {
+        var Shows = $resource('/shows', {}, {
             query: {
                 method: 'GET',
                 isArray: true
@@ -24,7 +24,7 @@ angular.module('watchHoursApp')
  */
 .factory('Series', ['$cacheFactory', '$resource', 'baseURL', function($cacheFactory, $resource, baseURL){
         // empty reference object
-        var Series = $resource(baseURL + '/shows/:id', {seriesId:'@id'}, {
+        var Series = $resource('/shows/:id', {seriesId:'@id'}, {
            query: {
                 method: 'GET',
                 isArray: false
@@ -39,7 +39,7 @@ angular.module('watchHoursApp')
  */
 .factory('Episodes', ['$cacheFactory', '$resource', 'baseURL', function($cacheFactory, $resource, baseURL){
         // empty reference array
-        var Episodes = $resource(baseURL + '/episodes/:seriesId', {seriesId:'@seriesId'}, {
+        var Episodes = $resource('/episodes/:seriesId', {seriesId:'@seriesId'}, {
             query: {
                 method: 'GET',
                 isArray: true
@@ -54,7 +54,7 @@ angular.module('watchHoursApp')
  */
 .factory('Posters', ['$cacheFactory', '$resource', 'baseURL', function($cacheFactory, $resource, baseURL){
         // empty reference array
-        var Posters = $resource(baseURL + '/posters/:seriesId', {seriesId:'@seriesId'}, {
+        var Posters = $resource('/posters/:seriesId', {seriesId:'@seriesId'}, {
             query: {
                 method: 'GET',
                 isArray: true
@@ -69,7 +69,7 @@ angular.module('watchHoursApp')
  */
 .factory('Actors', ['$cacheFactory', '$resource', 'baseURL', function($cacheFactory, $resource, baseURL){
     // empty reference array
-    var Actors = $resource(baseURL + '/actors/:seriesId', {seriesId:'@seriesId'}, {
+    var Actors = $resource('/actors/:seriesId', {seriesId:'@seriesId'}, {
         query: {
             method: 'GET',
             isArray: true
@@ -85,13 +85,13 @@ angular.module('watchHoursApp')
 .factory('Subscription', ['$http', 'baseURL', function($http, baseURL) {
         return {
             subscriptions: function(show, uid) {
-                return $http.post(baseURL + '/subscription/subscribe', { showId: show._id, uid: uid });
+                return $http.post('/subscription/subscribe', { showId: show._id, uid: uid });
             },
             watchlist: function(show, uid) {
-                return $http.post(baseURL + '/subscription/watchlist', { showId: show._id, uid: uid });
+                return $http.post('/subscription/watchlist', { showId: show._id, uid: uid });
             },
             favorites: function(show, uid) {
-                return $http.post(baseURL + '/subscription/favorites', { showId: show._id, uid: uid });
+                return $http.post('/subscription/favorites', { showId: show._id, uid: uid });
             }
         };
     }])
@@ -102,7 +102,7 @@ angular.module('watchHoursApp')
  */
 .factory('commentFactory', ['$resource', 'baseURL', function ($resource, baseURL) {
 
-    return $resource(baseURL + "/episodes/:id/comments/:commentId", {id:"@Id", commentId: "@CommentId"}, {
+    return $resource("/episodes/:id/comments/:commentId", {id:"@Id", commentId: "@CommentId"}, {
         'update': {
             method: 'PUT'
         }
@@ -221,7 +221,7 @@ angular.module('watchHoursApp')
     };
 
     authFac.forgotPassword = function(email){
-        $resource(baseURL + "/users/forgotpassword")
+        $resource("/users/forgotpassword")
             .save(email,
             function(response) {
                 message = response.res;
@@ -235,7 +235,7 @@ angular.module('watchHoursApp')
     }
 
     authFac.resetPassword = function(){
-        return $resource(baseURL + "/users/resetpassword", {authToken: '@authToken'}, {
+        return $resource("/users/resetpassword", {authToken: '@authToken'}, {
             'update': {
                 method: 'PUT'
             }
@@ -244,7 +244,7 @@ angular.module('watchHoursApp')
 
     authFac.login = function(loginData) {
 
-        $resource(baseURL + "/users/login")
+        $resource("/users/login")
             .save(loginData,
             function(response) {
                 storeUserCredentials({
@@ -265,14 +265,14 @@ angular.module('watchHoursApp')
     };
 
     authFac.logout = function() {
-        $resource(baseURL + "/users/logout").get(function(response){
+        $resource("/users/logout").get(function(response){
         });
         destroyUserCredentials();
     };
 
     authFac.register = function(registerData) {
 
-        $resource(baseURL + "/users/register")
+        $resource("/users/register")
             .save(registerData,
             function(response) {
                 authFac.login({username:registerData.username, password:registerData.password});
