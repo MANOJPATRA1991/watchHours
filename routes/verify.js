@@ -1,7 +1,7 @@
 var User = require('../models/users');
 var jwt = require('jsonwebtoken'); //used to create, sign, and verify tokens
 var fs = require('fs');
-var cert = fs.readFileSync('../watchours/bin/private.key'); //get private key
+var cert = fs.readFileSync(__dirname+'/private.key'); //get private key
 var config = require('../config.js');
 exports.getToken = function(user){
     // sign with RSA SHA 256
