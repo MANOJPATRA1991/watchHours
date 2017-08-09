@@ -39,7 +39,6 @@ app.all('*', function(req, res, next){
    if(req.secure){
        return next();
    };
-    res.redirect('https://watch-hours.herokuapp.com');
 });
 
 
