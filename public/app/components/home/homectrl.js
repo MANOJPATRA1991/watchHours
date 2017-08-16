@@ -23,13 +23,13 @@ angular.module('watchHoursApp')
                         // Filter episodes for today
                         if (HomeServices.isToday(moment(episodes[i].firstAired))) {
                             $scope.todaysepisodes.push(episodes[i]);
-                        
+                        }
                         // Filter episodes for tomorrow
-                        } else if (HomeServices.isTomorrow(moment(episodes[i].firstAired))) {
+                        if (HomeServices.isTomorrow(moment(episodes[i].firstAired))) {
                             $scope.tomorrowsepisodes.push(episodes[i]);
-                        
+                        }
                         // Filter episodes for this week
-                        } else if (HomeServices.isWithinAWeek(moment(episodes[i].firstAired))) {
+                        if (HomeServices.isWithinAWeek(moment(episodes[i].firstAired))) {
                             $scope.thisweeksepisodes.push(episodes[i]);
                         }
                     }

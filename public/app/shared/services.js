@@ -144,7 +144,7 @@ angular.module('watchHoursApp')
 
         // check if day is within this week
         homeServices.isWithinAWeek = function(momentDate) {
-            return momentDate.isAfter(TODAY, 'd') && momentDate.isBefore(moment().endOf('week'));
+            return momentDate.isAfter(moment().startOf('week')) && momentDate.isBefore(moment().endOf('week'));
         }
 
         return homeServices;
