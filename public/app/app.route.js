@@ -32,7 +32,7 @@ angular.module('watchHoursApp')
             .state('app.showsToday', {
                 views: {
                   'showday@app': {
-                      templateUrl: 'app/components/home/showstoday.html',
+                      templateUrl: 'app/components/home/showsToday.html',
                       controller: 'HomeCtrl'
                   }
                 }
