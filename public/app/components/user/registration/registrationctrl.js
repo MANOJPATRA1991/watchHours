@@ -89,7 +89,7 @@ angular.module('watchHoursApp')
                     { type: 'danger', msg: "Passwords don't match" }
                 )];
             }
-            $rootScope.$on('login:Successful', function(){
+            $rootScope.$on('registration:Successful', function(){
                 $state.go("app");
             });
             $rootScope.$on('login:Unsuccessful', function(){
