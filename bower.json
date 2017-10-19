@@ -22,7 +22,6 @@
     "angular-ui-router": "^0.4.2",
     "angular-animate": "^1.6.4",
     "angular-bootstrap": "^2.5.0",
-    "bootstrap-material-design": "4.0.0-beta",
     "angular-dialog": "^1.0.2",
     "ng-dialog": "^1.1.0",
     "bootstrap-social": "^5.1.1",
@@ -31,8 +30,5 @@
     "angular-formly": "^8.4.1",
     "angular-formly-templates-bootstrap": "^6.3.2",
     "angular-cache": "^4.6.0"
-  },
-  "resolutions": {
-    "bootstrap": "~3"
   }
 }
