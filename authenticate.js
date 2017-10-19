@@ -21,13 +21,13 @@ exports.facebook = passport.use(new FacebookStrategy({
     callbackURL: config.facebook.callbackURL,
     profileFields: config.facebook.profileFields
 }, function(accessToken, refreshToken, profile, done){
-    
+
     // asynchronous
     process.nextTick(function() {
-        
+
         User.findOne({OauthId: profile.id}, function(err, user){
             if(err){
-                console.log(err); //handle errors!
+                return {err: 'Cannot reach facebook server. Try after sometime'};
             }
             if(!err && user !== null){
                 done(null, user);
@@ -38,12 +38,10 @@ exports.facebook = passport.use(new FacebookStrategy({
                 user.email= profile.emails[0].value || '';
                 user.OauthId = profile.id;
                 user.OauthToken = accessToken;
-                user.picture = profile.picture;
                 user.save(function(err){
                     if(err){
-                        console.log(err); //handle errors
+                        done(err);
                     }else{
-                        console.log("saving user ...");
                         done(null, user);
                     }
                 });

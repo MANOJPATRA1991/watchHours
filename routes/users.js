@@ -27,17 +27,17 @@ router.route('/')
 // user registration
 router.post('/register', function(req, res){
     User.register(new User({
-                      username: req.body.username, 
+                      username: req.body.username,
                       email: req.body.email
                     }), req.body.password, function(err, user){
         if(err){
             return res.status(500).json({err: err});
         }
-       
+
         if(req.body.firstname){
             user.firstname = req.body.firstname;
         }
-        
+
         if(req.body.lastname){
             user.lastname = req.body.lastname;
         }
@@ -55,9 +55,9 @@ router.post('/register', function(req, res){
               to: user.email,
               subject: 'Confirm Registration ✔',
               text: 'Hello ' + user.username,
-              html: '<p>Hello ' + user.username + '<br> Greetings from watchHours' + 
-              'Click on the link below to verify email address.</p>' 
-                    + '<a href="https://watch-hours.herokuapp.com/users/verify?authToken=' + 
+              html: '<p>Hello ' + user.username + '<br> Greetings from watchHours' +
+              'Click on the link below to verify email address.</p>'
+                    + '<a href="https://watch-hours.herokuapp.com/users/verify?authToken=' +
                     user.tempToken + '">Click Here to Verify Your Account</a>'
             };
 
@@ -82,10 +82,10 @@ router.post('/register', function(req, res){
           passport.authenticate('local')(req, res, function(){
               agenda.start();
               agenda.schedule('now', 'verify user email');
-              return res.status(200).json({status: 'Account Registered! Please check your email for activation'}); 
-          }); 
+              return res.status(200).json({status: 'Account Registered! Please check your email for activation'});
+          });
         });
-    }); 
+    });
 });
 
 router.get('/verify', function(req, res) {
@@ -122,11 +122,11 @@ router.post('/login', function(req, res, next){
                    err: 'Could not log in user.'
                });
            }
-           
+
            console.log('User in users: ', user);
-           
+
            var token = Verify.getToken({"username":user.username, "_id":user._id, "admin":user.admin});
-           
+
            res.status(200).json({
                status: 'Login successful!',
                success: true,
@@ -149,19 +149,20 @@ router.get('/logout', function(req, res){
 });
 
 // facebook authentication with passport
-router.get('/facebook', passport.authenticate('facebook'));
+router.get('/facebook', passport.authenticate('facebook', { scope: [ 'email' ] }));
 
 router.get('/facebook/callback', function(req, res, next){
     passport.authenticate('facebook', function(err, user, info){
         if(err){
-            return next(err);
+            res.redirect(303, 'https://watch-hours.herokuapp.com/#!/login?err=' + 11000);
         }
-        if(!user){
+        else if(!user){
             return res.status(401).json({
                 err: info
             });
         }
-        req.logIn(user, function(err){
+        else{
+          req.logIn(user, function(err){
             if(err){
                 return res.status(500).json({
                     err: 'Could not log in user'
@@ -171,7 +172,8 @@ router.get('/facebook/callback', function(req, res, next){
             var token = Verify.getToken({"username":user.username, "_id":user._id, "admin":user.admin});
 
             res.redirect(303, 'https://watch-hours.herokuapp.com/#!/?token=' + token + '&user=' + user.username + '&_id=' + user._id + '&isVerified=' + user.isVerified);
-        });
+          });
+        }
     })(req, res, next);
 });
 
@@ -201,9 +203,9 @@ router.route('/forgotpassword')
           to: user.email,
           subject: 'Reset Password ✔',
           text: 'Hello ' + user.username,
-          html: '<p>Hello ' + user.username + '<br> Greetings from watchHours.' + 
-                'Click on the link below to reset your password.</p>' 
-                + '<a href="https://watch-hours.herokuapp.com/#!/resetpassword?authToken=' + 
+          html: '<p>Hello ' + user.username + '<br> Greetings from watchHours.' +
+                'Click on the link below to reset your password.</p>'
+                + '<a href="https://watch-hours.herokuapp.com/#!/resetpassword?authToken=' +
                 user.tempToken + '">Click Here to Verify Your Account</a>'
         };
 

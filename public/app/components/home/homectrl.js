@@ -6,9 +6,9 @@ angular.module('watchHoursApp')
         $scope.shows = [];
 
         $scope.alerts = [
-            { 
-                type: 'danger', 
-                msg: 'Please verify your account within 24 hours of registration in order to avoid deactivation.' }
+            {
+                type: 'danger',
+                msg: 'Please verify your account to avoid deactivation.' }
         ];
 
         Shows.query({}, function(resp){

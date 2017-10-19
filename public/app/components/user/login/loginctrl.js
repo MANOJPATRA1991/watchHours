@@ -1,5 +1,7 @@
 angular.module('watchHoursApp')
-.controller('LoginCtrl', ['$scope', '$rootScope', '$state', '$localStorage', 'AuthFactory', function ($scope, $rootScope, $state, $localStorage, AuthFactory) {
+.controller('LoginCtrl', ['$scope', '$rootScope', '$state', '$location',
+    '$localStorage', 'AuthFactory',
+    function ($scope, $rootScope, $state, $location, $localStorage, AuthFactory) {
 
         $scope.user = {};
         $scope.alerts = [];
@@ -34,10 +36,18 @@ angular.module('watchHoursApp')
                 }
             }
         ];
-        
+
         // try to get user info from local storage if available
         $scope.user = $localStorage.getObject('userinfo','{}');
-        
+
+        if($location.search()['err'] === '11000') {
+            $scope.alerts = [(
+                { type: 'danger', msg: "You have registered manually with the same email id. \
+                                        You cannot re-register with facebook. \
+                                        Please log in with username and password." }
+            )];
+        }
+
         /**
          * Perform Login for a user
          */
