@@ -281,7 +281,7 @@ angular.module('watchHoursApp')
                         {username:registerData.username, password:registerData.password});
                 }
 
-                $rootScope.$broadcast('login:Successful');
+                $rootScope.$broadcast('registration:Successful');
             },
             function(response){
                 console.log("Registration Unsuccessful!");
