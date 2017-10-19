@@ -60,6 +60,15 @@ angular.module('watchHoursApp')
             $rootScope.isVerified = AuthFactory.isVerified();
         });
 
+        // On successful registration
+        $rootScope.$on('registration:Successful', function () {
+            $rootScope.currentUser = AuthFactory.isAuthenticated();
+            $rootScope.username = AuthFactory.getUsername();
+            $rootScope.admin = AuthFactory.isAdmin();
+            $rootScope.uid = AuthFactory.uid();
+            $rootScope.isVerified = AuthFactory.isVerified();
+        });
+
         /**
          * Checks if state is as specified by the parameter
          *

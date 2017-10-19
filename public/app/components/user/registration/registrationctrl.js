@@ -83,9 +83,6 @@ angular.module('watchHoursApp')
         $scope.doRegister = function() {
             // check for password match before registering a user
             if($scope.user.password === $scope.user.repeat_password){
-                if($scope.user.remember_me){
-                    console.log('Doing registration', $scope.user);
-                }
                 AuthFactory.register($scope.user);
             }else{
                 $scope.alerts = [(

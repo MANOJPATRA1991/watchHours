@@ -282,10 +282,8 @@ angular.module('watchHoursApp')
                 if (registerData.rememberMe) {
                     $localStorage.storeObject('userinfo',
                         {username:registerData.username, password:registerData.password});
-                    $rootScope.broadcast('registration:Successful');
-                    console.log(AuthFactory.getUsername());
-                    $state.go("app");
                 }
+                $rootScope.$broadcast('registration:Successful');
             },
             function(err){
                 console.log("Registration Unsuccessful!");
