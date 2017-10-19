@@ -87,10 +87,6 @@ angular.module('watchHoursApp')
                     console.log('Doing registration', $scope.user);
                 }
                 AuthFactory.register($scope.user);
-                $rootScope.$on('registration:Successful', function(){
-                    console.log(AuthFactory.getUsername());
-                    $state.go("app");
-                });
             }else{
                 $scope.alerts = [(
                     { type: 'danger', msg: "Passwords don't match" }

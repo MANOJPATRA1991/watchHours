@@ -170,7 +170,10 @@ angular.module('watchHoursApp')
     }
 }])
 
-.factory('AuthFactory', ['$resource', '$http', '$localStorage', '$rootScope', '$window', 'baseURL', function($resource, $http, $localStorage, $rootScope, $window, baseURL){
+.factory('AuthFactory', ['$resource', '$http', '$localStorage',
+    '$rootScope', '$window', 'baseURL', '$state',
+    function($resource, $http, $localStorage,
+        $rootScope, $window, baseURL, $state){
 
     var authFac = {};
     var TOKEN_KEY = 'Token';
@@ -280,6 +283,8 @@ angular.module('watchHoursApp')
                     $localStorage.storeObject('userinfo',
                         {username:registerData.username, password:registerData.password});
                     $rootScope.broadcast('registration:Successful');
+                    console.log(AuthFactory.getUsername());
+                    $state.go("app");
                 }
             },
             function(err){
