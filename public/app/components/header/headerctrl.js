@@ -7,7 +7,7 @@ angular.module('watchHoursApp')
         $rootScope.admin = false;
         $rootScope.uid = '';
         $rootScope.isVerified = false;
-        
+
         Shows.query({}, function(resp) {
             // Sort shows by rating
             $scope.shows = resp.sort(HomeServices.compare);
@@ -53,15 +53,6 @@ angular.module('watchHoursApp')
 
         // On successful login
         $rootScope.$on('login:Successful', function () {
-            $rootScope.currentUser = AuthFactory.isAuthenticated();
-            $rootScope.username = AuthFactory.getUsername();
-            $rootScope.admin = AuthFactory.isAdmin();
-            $rootScope.uid = AuthFactory.uid();
-            $rootScope.isVerified = AuthFactory.isVerified();
-        });
-
-        // On successful registration
-        $rootScope.$on('registration:Successful', function () {
             $rootScope.currentUser = AuthFactory.isAuthenticated();
             $rootScope.username = AuthFactory.getUsername();
             $rootScope.admin = AuthFactory.isAdmin();

@@ -280,8 +280,6 @@ angular.module('watchHoursApp')
                     $localStorage.storeObject('userinfo',
                         {username:registerData.username, password:registerData.password});
                 }
-
-                $rootScope.$broadcast('registration:Successful');
             },
             function(response){
                 console.log("Registration Unsuccessful!");
