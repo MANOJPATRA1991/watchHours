@@ -87,7 +87,7 @@ angular.module('watchHoursApp')
                     console.log('Doing registration', $scope.user);
                 }
                 AuthFactory.register($scope.user);
-                $rootScope.$on('login:Successful', function(){
+                $rootScope.$on('registration:Successful', function(){
                     console.log(AuthFactory.getUsername());
                     $state.go("app");
                 });
