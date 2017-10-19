@@ -89,6 +89,9 @@ angular.module('watchHoursApp')
                     { type: 'danger', msg: "Passwords don't match" }
                 )];
             }
+            $rootScope.$on('login:Successful', function(){
+                $state.go("app");
+            });
             $rootScope.$on('login:Unsuccessful', function(){
                 $scope.alerts = [(
                     { type: 'danger', msg: AuthFactory.Error() }
