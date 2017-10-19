@@ -1,5 +1,7 @@
 angular.module('watchHoursApp')
-.controller('RegistrationCtrl', ['$scope', '$state', '$localStorage', 'AuthFactory', function ($scope, $state, $localStorage, AuthFactory) {
+.controller('RegistrationCtrl', ['$scope', '$state', '$localStorage',
+    'AuthFactory', '$rootScope',
+    function ($scope, $state, $localStorage, AuthFactory, $rootScope) {
 
         $scope.user = {};
         $scope.alerts = [];
