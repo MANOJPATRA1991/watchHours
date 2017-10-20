@@ -603,12 +603,8 @@ ul.alphabet, ul.genres{
   width: 99.06%;
 }
 
-.loading-container {
-    z-index: 99999;
-    width: 100%;
-    height: 100%;
-    top: 0; bottom: 0;
-    position: fixed;
-    background: black;
-    background: #ddd;
+.msg {
+  position: absolute;
+  top: 10px;
+  z-index: 700;
 }
