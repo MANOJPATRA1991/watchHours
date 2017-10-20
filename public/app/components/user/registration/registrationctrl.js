@@ -93,6 +93,7 @@ angular.module('watchHoursApp')
                 $scope.alerts = [(
                     { type: 'success', msg: "You have registered successfully. Redirecting to login page."}
                 )];
+                $state.go('app.login');
             });
         };
 
