@@ -602,10 +602,3 @@ ul.alphabet, ul.genres{
   padding-right: 10px;
   width: 99.06%;
 }
-
-.msg {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 700;
-}
