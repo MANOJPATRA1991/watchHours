@@ -602,3 +602,13 @@ ul.alphabet, ul.genres{
   padding-right: 10px;
   width: 99.06%;
 }
+
+.loading-container {
+    z-index: 99999;
+    width: 100%;
+    height: 100%;
+    top: 0; bottom: 0;
+    position: fixed;
+    background: black;
+    background: #ddd;
+}
