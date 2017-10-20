@@ -1,4 +1,7 @@
 <div class="container-fluid">
+    <div class="row" style="z-index: 100; text-align: center;" ng-if="!currentUser">
+        <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>
+    </div>
     <div class="row">
         <div class="login-card">
             <form class="form-signin" ng-submit="doLogin()" novalidate>
@@ -18,8 +21,5 @@
             <a ui-sref="app.forgotpassword" class="forgot-password">Forgot your password?</a>
             <br>
         </div>
-    </div>
-    <div class="msg" style="z-index: 100; text-align: center;" ng-if="!currentUser">
-        <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>
     </div>
 </div>
