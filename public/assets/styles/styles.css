@@ -604,7 +604,8 @@ ul.alphabet, ul.genres{
 }
 
 .msg {
-  position: absolute;
+  position: sticky;
   top: 10px;
+  width: 100%;
   z-index: 700;
 }

@@ -56,6 +56,12 @@ angular.module('watchHoursApp')
                 $localStorage.storeObject('userinfo', $scope.user);
             AuthFactory.login($scope.user);
             $rootScope.$on('login:Successful', function(){
+                $scope.alerts = [(
+                    {
+                        type: 'success',
+                        msg: 'Log in successful. Redirecting to home page in 10 seconds...'
+                    }
+                )]
                 $state.go("app");
             });
             $rootScope.$on('login:Unsuccessful', function(){
