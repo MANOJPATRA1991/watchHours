@@ -89,6 +89,11 @@ angular.module('watchHoursApp')
                     { type: 'danger', msg: "Passwords don't match" }
                 )];
             }
+            $rootScope.$on('registration:Successful', function(){
+                $scope.alerts = [(
+                    { type: 'success', msg: "You have registered successfully. Redirecting to login page."}
+                )];
+            });
         };
 
         /**

@@ -48,12 +48,6 @@ angular.module('watchHoursApp')
             )];
         }
 
-        $rootScope.$on('registration:Successful', function(){
-            $scope.alerts = [(
-                { type: 'success', msg: "You have registered successfully. Login here to continue."}
-            )];
-        });
-
         /**
          * Perform Login for a user
          */
