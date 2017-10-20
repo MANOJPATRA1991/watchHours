@@ -280,6 +280,7 @@ angular.module('watchHoursApp')
             function(response){
                 $rootScope.$broadcast('registration:Successful');
                 $state.go('app.login');
+
             },
             function(err){
                 console.log("Registration Unsuccessful!");
