@@ -66,7 +66,7 @@ angular.module('watchHoursApp')
             });
             $rootScope.$on('login:Unsuccessful', function(){
                 $scope.alerts = [(
-                    { type: 'danger', msg: AuthFactory.Error() }
+                    { type: 'danger', msg: "Invalid username or password. Check again." }
                 )];
             });
         };
