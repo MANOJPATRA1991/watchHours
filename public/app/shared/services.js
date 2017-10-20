@@ -171,9 +171,9 @@ angular.module('watchHoursApp')
 }])
 
 .factory('AuthFactory', ['$resource', '$http', '$localStorage',
-    '$rootScope', '$window', 'baseURL',
+    '$rootScope', '$window', 'baseURL', '$state',
     function($resource, $http, $localStorage,
-        $rootScope, $window, baseURL){
+        $rootScope, $window, baseURL, $state){
 
     var authFac = {};
     var TOKEN_KEY = 'Token';
@@ -279,6 +279,7 @@ angular.module('watchHoursApp')
             .save(registerData,
             function(response){
                 $rootScope.$broadcast('registration:Successful');
+                $state.go('app.login');
             },
             function(err){
                 console.log("Registration Unsuccessful!");
