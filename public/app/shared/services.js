@@ -278,7 +278,7 @@ angular.module('watchHoursApp')
         $resource("/users/register")
             .save(registerData,
             function(response){
-                $state.go("app.login");
+                $state.go('app.login');
                 $rootScope.$broadcast('registration:Successful');
             },
             function(err){
