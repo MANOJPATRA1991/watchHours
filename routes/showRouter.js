@@ -32,7 +32,7 @@ agenda.define('send email show alert', function(job, done) {
 
     var transporter = nodemailer.createTransport({
       service: 'gmail',
-      auth: { user: 'patra.manoj0@gmail.com', pass: 'MAN@1991' }
+      auth: { user: 'patra.manoj0@gmail.com', pass: 'zwszdvovwxlxvukd' }
     });
 
     var mailOptions = {
@@ -52,8 +52,6 @@ agenda.define('send email show alert', function(job, done) {
     });
   });
 });
-
-//agenda.start();
 
 agenda.on('start', function(job) {
   console.log("Job %s starting", job.attrs.name);
