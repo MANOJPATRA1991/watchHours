@@ -43,6 +43,9 @@ angular.module('watchHoursApp')
             query: {
                 method: 'GET',
                 isArray: true
+            },
+            'update': {
+                method: 'PUT'
             }
         });
         return Episodes;
@@ -63,6 +66,19 @@ angular.module('watchHoursApp')
         return Posters;
     }])
 
+/**
+ * Get count of posters
+ */
+.factory('PostersCount', ['$cacheFactory', '$resource', 'baseURL', function($cacheFactory, $resource, baseURL){
+    // empty reference array
+    var PostersCount = $resource('/posters/:seriesId/count', {seriesId:'@seriesId'}, {
+        query: {
+            method: 'GET',
+            isArray: false
+        }
+    });
+    return PostersCount;
+}])
 
 /**
  *  This factory is used to perform GET request for actors of a particular show
@@ -78,6 +94,19 @@ angular.module('watchHoursApp')
     return Actors;
 }])
 
+/**
+ * Get count of actors
+ */
+.factory('ActorsCount', ['$cacheFactory', '$resource', 'baseURL', function($cacheFactory, $resource, baseURL){
+    // empty reference array
+    var ActorsCount = $resource('/actors/:seriesId/count', {seriesId:'@seriesId'}, {
+        query: {
+            method: 'GET',
+            isArray: false
+        }
+    });
+    return ActorsCount;
+}])
 
 /**
  *  This factory is used to perform POST request to subscribe, watchlist and favorites

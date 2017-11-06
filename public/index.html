@@ -16,6 +16,10 @@
 
 <body ng-app="watchHoursApp">
 
+    <div ng-if="isLoading" class="loading">
+        <div class="spinner"></div>>
+    </div>
+
     <div ui-view="header"></div>
 
     <div ui-view="content"></div>

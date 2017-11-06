@@ -29,13 +29,28 @@ angular.module('watchHoursApp')
 	                    { type: 'success', msg: "Episodes Added!" }
 	                )];
 		        },
-		        function(err){
-		        	$scope.alerts = [(
-	                    { type: 'danger', msg: "Data already exists!" }
-	                )];
-		        }
+				function(err){
+					$scope.alerts = [(
+						{ type: 'danger', msg: "Data already exists!" }
+					)];
+				}
 	        );
-        };
+		};
+		
+		$scope.updateEpisodes = function(id) {
+			Episodes.update({}, {IMDB: id},
+				function(resp){
+					$scope.alerts = [(
+						{ type: 'success', msg: "Episodes Updated!" }
+					)];
+				},
+				function(err){
+					$scope.alerts = [(
+						{ type: 'danger', msg: "Data already exists!" }
+					)];
+				}
+			)
+		}
 
         $scope.addActors = function(id){
         	Actors.save({}, {IMDB: id},
