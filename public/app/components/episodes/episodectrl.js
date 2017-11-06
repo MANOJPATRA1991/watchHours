@@ -76,9 +76,10 @@ angular.module('watchHoursApp')
                 }
             }else if($stateParams.year){
                 for(let i = 0; i < episodes.length; i++){
-                    if(episodes[i].airedSeason !== 0 &&
-                        episodes[i].firstAired.substr(0,4) == $stateParams.year){
-                        $scope.episodes.push(episodes[i]);
+                    if(episodes[i].airedSeason !== 0 && episodes[i].firstAired !== null){
+                        if(episodes[i].firstAired.toString().substr(0,4) == $stateParams.year){
+                            $scope.episodes.push(episodes[i]);
+                        }
                     }
                 }
             }
@@ -97,7 +98,9 @@ angular.module('watchHoursApp')
             temp = [];
             for(let i = 0; i < episodes.length; i++){
                 if(episodes[i].airedSeason !== 0){
-                    temp.push(episodes[i].firstAired.substr(0,4));
+                    if(episodes[i].firstAired !== null){
+                        temp.push(episodes[i].firstAired.substr(0,4));
+                    }
                 }
             }
             $scope.firstAired = temp.unique();

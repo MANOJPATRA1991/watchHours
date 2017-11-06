@@ -9,6 +9,10 @@ angular.module('watchHoursApp')
             $rootScope.$broadcast('login:Successful');
         }
 
+        $rootScope.$on('$routeChangeStart', function(next, current) { 
+            $rootScope.isLoading = true;
+        });
+
         Array.prototype.contains = function(v) {
             for(var i = 0; i < this.length; i++) {
                 if(this[i] === v) return true;
