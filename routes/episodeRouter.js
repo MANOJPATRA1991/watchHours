@@ -85,7 +85,6 @@ episodeRouter.route('/')
                                 if (err) {
                                     if (err.code == 11000) {
                                         console.log('Episode already exists');
-                                        return res.status(409).end('Episode already exists!');
                                     }
                                     next(err);
                                 }
@@ -127,21 +126,23 @@ episodeRouter.route('/')
                         Episode.findById(response.id, (err, episode) => {
                             if(err) next(err);
                             
-                            episode.airedEpisodeNumber = response.airedEpisodeNumber,
-                            episode.airedSeason = response.airedSeason,
-                            episode.director = response.director,
-                            episode.episodeName = response.episodeName,
-                            episode.episodeImage = BASE_IMAGE_URL + response.filename,
-                            episode.firstAired = response.firstAired,
-                            episode.guestStars = response.guestStars,
-                            episode.overview = response.overview,
-                            episode.seriesId = response.seriesId,
-                            episode.writers = response.writers
-
-                            episode.save((err, episode) => {
-                                if (err) next(err);
-                                console.log('Updated Episode ' + episode._id + '!');
-                            });
+                            if(episode !== null) {
+                                episode.airedEpisodeNumber = response.airedEpisodeNumber;
+                                episode.airedSeason = response.airedSeason;
+                                episode.director = response.director;
+                                episode.episodeName = response.episodeName;
+                                episode.episodeImage = BASE_IMAGE_URL + response.filename;
+                                episode.firstAired = response.firstAired;
+                                episode.guestStars = response.guestStars;
+                                episode.overview = response.overview;
+                                episode.seriesId = response.seriesId;
+                                episode.writers = response.writers;
+    
+                                episode.save((err, episode) => {
+                                    if (err) next(err);
+                                    console.log('Updated Episode ' + episode._id + '!');
+                                });
+                            }
                         });
                     })
                     .catch(error => {next(error);});

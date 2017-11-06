@@ -5,7 +5,7 @@ angular.module('watchHoursApp')
 
         $scope.user = {};
         $scope.alerts = [];
-
+        
         // User fields for the login form
         $scope.userFields = [
             {
@@ -52,10 +52,12 @@ angular.module('watchHoursApp')
          * Perform Login for a user
          */
         $scope.doLogin = function() {
+            $rootScope.isLoading = true;
             if($scope.user.remember_me)
                 $localStorage.storeObject('userinfo', $scope.user);
             AuthFactory.login($scope.user);
             $rootScope.$on('login:Successful', function(){
+                $rootScope.isLoading = false;
                 $scope.alerts = [(
                     {
                         type: 'success',
@@ -65,6 +67,7 @@ angular.module('watchHoursApp')
                 $state.go("app");
             });
             $rootScope.$on('login:Unsuccessful', function(){
+                $rootScope.isLoading = false;
                 $scope.alerts = [(
                     { type: 'danger', msg: "Invalid username or password. Check again." }
                 )];

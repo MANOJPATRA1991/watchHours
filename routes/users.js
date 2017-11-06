@@ -46,8 +46,8 @@ router.post('/register', function(req, res){
         console.log(user.tempToken);
         agenda.define('verify user email', {concurrency: 1}, function(job, done){
           var transporter = nodemailer.createTransport({
-              service: 'SendGrid',
-              auth: { user: 'MANOJPATRA', pass: 'MAN#1991' }
+              service: 'gmail',
+              auth: { user: 'patra.manoj0@gmail.com', pass: 'zwszdvovwxlxvukd' }
             });
 
             var mailOptions = {
@@ -63,7 +63,7 @@ router.post('/register', function(req, res){
 
             transporter.sendMail(mailOptions, function(error, response) {
                   if(error){
-                    next(error);
+                    res.status(500).end("Internal server error");
                   }
                   console.log('Message sent: ' + response);
                   done();
@@ -98,7 +98,7 @@ router.get('/verify', function(req, res) {
           user.save();
           res.redirect(303, 'https://watch-hours.herokuapp.com/#!/?token=' + req.query.authToken + '&user=' + user.username + '&_id=' + user._id + '&isVerified=' + user.isVerified);
         }else{
-          res.status(201).json('Already verified. Log in to continue');
+          res.redirect(201, 'https://watch-hours.herokuapp.com/#!/');
         }
       });
   });
@@ -127,14 +127,54 @@ router.post('/login', function(req, res, next){
 
            var token = Verify.getToken({"username":user.username, "_id":user._id, "admin":user.admin});
 
-           res.status(200).json({
-               status: 'Login successful!',
-               success: true,
-               token: token,
-               admin: user.admin,
-               _id: user._id,
-               isVerified: user.isVerified
-           });
+           if(!user.isVerified){
+               console.log(user.isVerified);
+                agenda.define('verify user email', {concurrency: 1}, function(job, done){
+                    var transporter = nodemailer.createTransport({
+                        service: 'gmail',
+                        auth: { user: 'patra.manoj0@gmail.com', pass: 'zwszdvovwxlxvukd' }
+                    });
+            
+                    var mailOptions = {
+                        from: 'Manoj Patra 👻 <patra.manoj0@gmail.com>',
+                        to: user.email,
+                        subject: 'Confirm Registration ✔',
+                        text: 'Hello ' + user.username,
+                        html: '<p>Hello ' + user.username + '<br> Greetings from watchHours' +
+                        'Click on the link below to verify email address.</p>'
+                            + '<a href="https://watch-hours.herokuapp.com/users/verify?authToken=' +
+                            user.tempToken + '">Click Here to Verify Your Account</a>'
+                    };
+            
+                    transporter.sendMail(mailOptions, function(error, response) {
+                            if(error){
+                            res.status(500).end("Internal server error");
+                            }
+                            console.log('Message sent: ' + response);
+                            done();
+                    });
+                });
+        
+                agenda.on('start', function(job) {
+                    console.log("Job %s starting", job.attrs.name);
+                });
+        
+                agenda.on('complete', function(job) {
+                    console.log("Job %s finished", job.attrs.name);
+                });
+                
+                agenda.start();
+                agenda.schedule('now', 'verify user email');
+            }
+
+            res.status(200).json({
+                status: 'Login successful!',
+                success: true,
+                token: token,
+                admin: user.admin,
+                _id: user._id,
+                isVerified: user.isVerified
+            });
        });
    })(req, res, next); //on success req.user contains the authenticated user
 });
@@ -177,25 +217,13 @@ router.get('/facebook/callback', function(req, res, next){
     })(req, res, next);
 });
 
-router.route('/unverified')
-.delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next){
-  var twentyFourHoursOld = new Date()
-  twentyFourHoursOld.setHours(twentyFourHoursOld.getHours()-24)
-  User.remove({timestamp: {$lt:twentyFourHoursOld}}, function(err, result) {
-      if(err){
-        next(err);
-      }
-      res.json(result);
-  })
-});
-
 router.route('/forgotpassword')
 .post(function(req, res, next){
   User.findOne({email: req.body.email}, function(err, user){
     agenda.define('reset user password', {concurrency: 1}, function(job, done){
       var transporter = nodemailer.createTransport({
-          service: 'SendGrid',
-          auth: { user: 'MANOJPATRA', pass: 'MAN#1991' }
+          service: 'gmail',
+          auth: { user: 'patra.manoj0@gmail.com', pass: 'zwszdvovwxlxvukd' }
         });
 
         var mailOptions = {
@@ -206,7 +234,7 @@ router.route('/forgotpassword')
           html: '<p>Hello ' + user.username + '<br> Greetings from watchHours.' +
                 'Click on the link below to reset your password.</p>'
                 + '<a href="https://watch-hours.herokuapp.com/#!/resetpassword?authToken=' +
-                user.tempToken + '">Click Here to Verify Your Account</a>'
+                user.tempToken + '">Click Here to Change Your Password</a>'
         };
 
         transporter.sendMail(mailOptions, function(error, response) {
@@ -224,18 +252,15 @@ router.route('/forgotpassword')
     agenda.on('complete', function(job) {
       console.log("Job %s finished", job.attrs.name);
     });
+
     if(err){
-      return res.status(500).json({
-                    err: "Can't find that email, sorry."
-                });
+        return res.status(500).json({
+            err: "Can't find that email, sorry."
+        });
     }
     if(user){
         agenda.start();
         agenda.schedule('now', 'reset user password');
-
-        return res.status(200).json({
-                    res: "Email sent."
-                });
     }
   });
 });

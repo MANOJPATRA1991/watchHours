@@ -1,5 +1,6 @@
 angular.module('watchHoursApp')
-    .controller('HomeCtrl', ['$scope', 'Shows', 'Episodes', 'HomeServices', function($scope, Shows, Episodes, HomeServices){
+    .controller('HomeCtrl', ['$scope', 'Shows', 'Episodes', 'HomeServices', '$rootScope',
+    function($scope, Shows, Episodes, HomeServices, $rootScope){
         $scope.todaysepisodes = [];
         $scope.tomorrowsepisodes = [];
         $scope.thisweeksepisodes = [];
@@ -35,7 +36,8 @@ angular.module('watchHoursApp')
                     }
                 });
             }
-
+            
+            
             /**
              * Get show based on show id
              *
@@ -48,8 +50,11 @@ angular.module('watchHoursApp')
                     }
                 }
             };
-        });
 
+            if($scope.shows.length >= 0) {
+                $rootScope.isLoading = false;
+            }
+        });
         /**
          * Close alert box as mentioned by index
          *

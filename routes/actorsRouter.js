@@ -20,19 +20,31 @@ actorsRouter.route('/:seriesId')
         // /?seriesId=
         var seriesId = req.params.seriesId;
         var actors = [];
+        let skip = +req.query.skip;
         if (seriesId) {
-            // find all actors for a particular series id
-            actors = Actor.find().where({seriesId: seriesId});
+            // find all posters for a particular series id
+            actors = Actor.find({seriesId: seriesId});
+            actors.sort().skip(skip*6).limit(6);
         }
 
-        // execute the query actors.find()
-        actors.find().exec(function(err, actors) {
+        // execute the query posters.find()
+        actors.exec(function(err, actors) {
             // if any error exist, move to the next middleware function
             if (err) next(err);
+            console.log(actors);
             // write result to the response as json
             res.json(actors);
         });
     });
+
+actorsRouter.route('/:seriesId/count')
+// get number of documents for the given category
+.get(function(req, res, next) {
+    Actor.count({seriesId: req.params.seriesId}, function(err, result){
+        if(err) next(err);
+        res.status(200).json({result: result});
+    });
+});
 
 actorsRouter.route('/')
     .post(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
@@ -67,7 +79,6 @@ actorsRouter.route('/')
                     if (err) {
                         if (err.code == 11000) {
                             console.log('Actor already exists');
-                            return res.status(409).end('Actor already exists!');
                         }
                         next(err);
                     }

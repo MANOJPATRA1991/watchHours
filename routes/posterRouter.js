@@ -20,19 +20,30 @@ posterRouter.route('/:seriesId')
         // /?seriesId=
         var seriesId = req.params.seriesId;
         var posters = [];
+        let skip = +req.query.skip;
         if (seriesId) {
             // find all posters for a particular series id
-            posters = Poster.find().where({seriesId: seriesId}); 
+            posters = Poster.find({seriesId: seriesId});
+            posters.sort().skip(skip*5).limit(5);
         }
 
         // execute the query posters.find()
-        posters.find().exec(function(err, posters) {
+        posters.exec(function(err, posters) {
             // if any error exist, move to the next middleware function
             if (err) next(err);
             // write result to the response as json
             res.json(posters);
         });
     });
+
+posterRouter.route('/:seriesId/count')
+// get number of documents for the given category
+.get(function(req, res, next) {
+    Poster.count({seriesId: req.params.seriesId}, function(err, result){
+        if(err) next(err);
+        res.status(200).json({result: result});
+    });
+});
 
 posterRouter.route('/')
     .post(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
@@ -65,7 +76,6 @@ posterRouter.route('/')
                             if (err) {
                                 if (err.code == 11000) {
                                     console.log('Poster already exists');
-                                    return res.status(409).end('Poster already exists!');
                                 }
                                 next(err);
                             }

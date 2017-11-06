@@ -81,19 +81,21 @@ angular.module('watchHoursApp')
          * Performs registration for a user
          */
         $scope.doRegister = function() {
+            $rootScope.isLoading = true;
             // check for password match before registering a user
             if($scope.user.password === $scope.user.repeat_password){
                 AuthFactory.register($scope.user);
+                $scope.alerts = [(
+                    { type: 'success', msg: "You have registered successfully. Redirecting to login page in 10 seconds..."}
+                )];
             }else{
                 $scope.alerts = [(
                     { type: 'danger', msg: "Passwords don't match" }
                 )];
             }
             $rootScope.$on('registration:Successful', function(){
+                $rootScope.isLoading = false;
                 $state.go('app.login');
-                $scope.alerts = [(
-                    { type: 'success', msg: "You have registered successfully. Redirecting to login page in 10 seconds..."}
-                )];
             });
         };
 

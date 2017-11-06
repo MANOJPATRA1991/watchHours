@@ -31,8 +31,8 @@ agenda.define('send email show alert', function(job, done) {
     })[0];
 
     var transporter = nodemailer.createTransport({
-      service: 'SendGrid',
-      auth: { user: 'MANOJPATRA', pass: 'MAN#1991' }
+      service: 'gmail',
+      auth: { user: 'patra.manoj0@gmail.com', pass: 'MAN@1991' }
     });
 
     var mailOptions = {

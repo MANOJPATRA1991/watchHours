@@ -1,5 +1,9 @@
 angular.module('watchHoursApp')
-.controller('SeriesCtrl', ['$scope', '$sce', '$state', '$stateParams', '$rootScope', 'Series', 'Actors', 'Episodes', 'Posters', 'Subscription', function($scope, $sce, $state, $stateParams, $rootScope, Series, Actors, Episodes, Posters, Subscription){
+.controller('SeriesCtrl', ['$scope', '$sce', '$state', 
+'$stateParams', '$rootScope', 'Series', 'Actors', 
+'Episodes', 'Posters', 'PostersCount', 'ActorsCount', 'Subscription', 
+function($scope, $sce, $state, $stateParams, $rootScope, Series, 
+    Actors, Episodes, Posters, PostersCount, ActorsCount, Subscription){
         $scope.show = {};
         $scope.episodes = [];
         $scope.seasons = [];
@@ -9,19 +13,44 @@ angular.module('watchHoursApp')
         $scope.isSubscribed = false;
         $scope.isInWatchlist = false;
         $scope.isInFavorites = false;
+        $scope.currentPage = 1;
+        $scope.entryLimit = 5; // items per page
 
-        // Get Actors for the series
-        Actors.query({seriesId: $stateParams.seriesId}, function(actors){
-            $scope.actors = actors;
+        
+        $scope.$on('$routeChangeStart', function(next, current) { 
+            $rootScope.isLoading = true;
         });
 
         // Get Posters for the series
-        Posters.query({seriesId: $stateParams.seriesId}, function(posters){
-            $scope.posters = posters;
-            $scope.currentPage = 1;
-            $scope.totalItems = $scope.posters.length;
-            $scope.entryLimit = 14; // items per page
-            $scope.noOfPages = Math.ceil($scope.totalItems / $scope.entryLimit);
+        $scope.getActors = function(x) {
+            Actors.query({seriesId: $stateParams.seriesId, skip: x}, function(actors){
+                $scope.actors = actors;
+            });
+        };
+        
+        // call on first load of series details page
+        $scope.getActors(0);
+
+        // Get count of posters
+        ActorsCount.query({seriesId: $stateParams.seriesId}, function(count){
+            $scope.totalItems = count.result;
+        });
+
+
+        // Get Posters for the series
+        $scope.getPosters = function(x) {
+            Posters.query({seriesId: $stateParams.seriesId, skip: x}, function(posters){
+                $scope.posters = posters;
+                console.log($scope.posters);
+            });
+        };
+        
+        // call on first load of series details page
+        $scope.getPosters(0);
+
+        // Get count of posters
+        PostersCount.query({seriesId: $stateParams.seriesId}, function(count){
+            $scope.totalItems = count.result;
         });
 
         // Get Series details
@@ -140,10 +169,18 @@ angular.module('watchHoursApp')
             temp = [];
             for(let i = 0; i < $scope.episodes.length; i++){
                 if($scope.episodes[i].airedSeason !== 0){
-                    temp.push($scope.episodes[i].firstAired.substr(0,4));
+                    if($scope.episodes[i].firstAired !== null){
+                        let year = $scope.episodes[i].firstAired.toString().substr(0,4);
+                        console.log(year);
+                        temp.push(year);
+                    }
                 }
             }
             $scope.firstAired = temp.unique();
             temp = [];
+
+            if($scope.episodes.length >= 0) {
+                $rootScope.isLoading = false;
+            }
         });
     }]);

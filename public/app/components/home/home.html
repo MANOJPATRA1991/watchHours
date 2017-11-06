@@ -1,7 +1,9 @@
 <div class="container" ng-if="currentUser && !isVerified">
   <div class="row">
     <div class="col-md-12">
-      <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>
+      <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">
+        {{alert.msg}} 
+      </div>
     </div>
   </div>
 </div>
