@@ -7,7 +7,7 @@ angular.module('watchHoursApp')
         $rootScope.admin = false;
         $rootScope.uid = '';
         $rootScope.isVerified = false;
-
+        $scope.state = $state;
         Shows.query({}, function(resp) {
             // Sort shows by rating
             $scope.shows = resp.sort(HomeServices.compare);

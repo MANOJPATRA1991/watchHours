@@ -88,7 +88,8 @@ actorsRouter.route('/')
             });
         });
     })
-    .catch(error => {next(error);})
+    .catch(error => {next(error);});
+    res.status(200).send("Job completed");
 })
 .catch(error => {next(error);});
 });

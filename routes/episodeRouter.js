@@ -96,7 +96,8 @@ episodeRouter.route('/')
                     .catch(error => {next(error);});
                 });
             })
-            .catch(error => {next(error);})
+            .catch(error => {next(error);});
+            res.status(200).send("Job completed");
             })
         .catch(error => {next(error);});
     });
@@ -148,9 +149,10 @@ episodeRouter.route('/')
                     .catch(error => {next(error);});
                 });
             })
-            .catch(error => {next(error);})
+            .catch(error => {next(error);});
             })
         .catch(error => {next(error);});
+        res.status(200).send("Job completed");
     });
 
 episodeRouter.route('/:episodeId/comments')
@@ -172,7 +174,6 @@ episodeRouter.route('/:episodeId/comments')
             episode.comments.push(req.body);
             episode.save((err, episode) => {
                 if (err) next(err);
-                console.log('Updated Comments!');
                 res.json(episode);
             });
         });

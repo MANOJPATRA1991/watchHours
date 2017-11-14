@@ -7,6 +7,8 @@ angular.module('watchHoursApp')
             return parseFloat(a) - parseFloat(b);
         });
 
+        $rootScope.back = 'series/' + $stateParams.seriesId;
+
         // GET a show based on show id
         Series.query({ id: $stateParams.seriesId }, function(show) {
             $scope.show = show;
@@ -40,10 +42,8 @@ angular.module('watchHoursApp')
         $scope.submitComment = function (id) {
 
             commentFactory.save({id: id}, $scope.mycomment);
+            location.reload();
 
-            $state.go($state.current, {}, {reload: true});
-
-            $scope.commentForm.$setPristine();
         };
 
         /**
@@ -52,8 +52,7 @@ angular.module('watchHoursApp')
          */
         $scope.editComment = function(id, commentId) {
             commentFactory.update({id: id, commentId: commentId}, $scope.editcomment);
-            
-            $state.go($state.current, {}, {reload: true});
+            location.reload();
         };
 
         /**
@@ -62,8 +61,7 @@ angular.module('watchHoursApp')
          */
         $scope.deleteComment = function(id, commentId) {
             commentFactory.delete({id: id, commentId: commentId});
-            
-            $state.go($state.current, {}, {reload: true});
+            location.reload();
         };
 
         Episodes.query({seriesId: $stateParams.seriesId}, function(episodes){

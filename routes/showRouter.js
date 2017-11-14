@@ -16,7 +16,7 @@ showRouter.use(bodyParser.json());
 var BASE_IMAGE_URL = "https://thetvdb.com/banners/";
 
 var agenda = require('agenda')({ db: { address: 'mongodb://MANOJ_PATRA:MAN#1991@ds145138.mlab.com:45138/watchours' } });
-var sugar = require('sugar');
+var Sugar = require('sugar');
 var nodemailer = require('nodemailer');
 
 agenda.define('send email show alert', function(job, done) {
@@ -38,8 +38,8 @@ agenda.define('send email show alert', function(job, done) {
     var mailOptions = {
       from: 'Manoj Patra 👻 <patra.manoj0@gmail.com>',
       to: emails.join(','),
-      subject: show.seriesName + ' is starting soon!',
-      text: show.seriesName + ' starts in less than 2 hours on ' + show.network + '.\n\n' +
+      subject: show.seriesName + ' will air in few seconds!',
+      text: show.seriesName + ' starts in less than a minute on ' + show.network + '.\n\n' +
       'Episode ' + upcomingEpisode.airedEpisodeNumber + ' Overview\n\n' + upcomingEpisode.overview
     };
 
@@ -133,22 +133,23 @@ showRouter.route('/')
                 .then(response => {
                     show.poster = BASE_IMAGE_URL + response[0].fileName;
                     Show.create(show, function(err, newShow){
-                        if(err){
-                            if (err) {
-                                if (err.code == 11000) {
-                                    console.log('Show already exists');
-                                    return res.status(409).end('Show already exists!');
-                                }
-                                next(err);
-                                var alertDate = Sugar.Date.create('Next ' + show.airsDayOfWeek + ' at ' + show.airsTime).rewind({ hour: 2});
-                                agenda.schedule(alertDate, 'send email show alert', show.seriesName).repeatEvery('1 week');
+                        if (err) {
+                            if (err.code == 11000) {
+                                console.log('Show already exists');
+                                return res.status(409).end('Show already exists!');
                             }
+                            next(err);
                         }
+                        var alertDate = Sugar.Date.create('Next ' + newShow.airsDayOfWeek + ' at ' + newShow.airsTime);
+                        agenda.start();
+                        agenda.schedule(alertDate, 'send email show alert', newShow.seriesName).repeatEvery('1 week');
                         console.log('Show created!');
                         var id = newShow._id;
                     });
                 })
                 .catch(error => {next(error);});
+
+                res.status(200).send("Job completed");
             })
             .catch(error => {next(error);})
         })

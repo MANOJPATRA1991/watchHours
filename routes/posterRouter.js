@@ -49,7 +49,6 @@ posterRouter.route('/')
     .post(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
         // the tmdb api key for my account
         var apiKey = '5BB799C77561B167';
-        
         // create a new TVDB instance
         var tvdb = new TVDB(apiKey);
 
@@ -60,7 +59,7 @@ posterRouter.route('/')
         .then(response => {
             // retrieve series id from the returned data
             // and search for series data from TVDB
-            tvdb.getSeriesFanArts(response[0].id)
+            tvdb.getSeriesImages(response[0].id, 'fanart')
             .then(response => {
                 var posters = response;
                 _.each(posters, function(data) {
@@ -85,7 +84,8 @@ posterRouter.route('/')
                     });
                 });
             })
-            .catch(error => {next(error);})
+            .catch(error => {next(error);});
+            res.status(200).send("Job completed");
             })
         .catch(error => {next(error);});
     });

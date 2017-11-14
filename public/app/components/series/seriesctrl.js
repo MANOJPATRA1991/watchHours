@@ -16,7 +16,8 @@ function($scope, $sce, $state, $stateParams, $rootScope, Series,
         $scope.currentPage = 1;
         $scope.entryLimit = 5; // items per page
 
-        
+        $rootScope.back = '';
+
         $scope.$on('$routeChangeStart', function(next, current) { 
             $rootScope.isLoading = true;
         });
@@ -41,7 +42,6 @@ function($scope, $sce, $state, $stateParams, $rootScope, Series,
         $scope.getPosters = function(x) {
             Posters.query({seriesId: $stateParams.seriesId, skip: x}, function(posters){
                 $scope.posters = posters;
-                console.log($scope.posters);
             });
         };
         
@@ -171,7 +171,6 @@ function($scope, $sce, $state, $stateParams, $rootScope, Series,
                 if($scope.episodes[i].airedSeason !== 0){
                     if($scope.episodes[i].firstAired !== null){
                         let year = $scope.episodes[i].firstAired.toString().substr(0,4);
-                        console.log(year);
                         temp.push(year);
                     }
                 }

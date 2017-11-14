@@ -9,9 +9,10 @@ angular.module('watchHoursApp')
         $scope.addShow = function(id){
         	Shows.save({}, {IMDB: id},
 	        	function(resp){
-	        		$scope.add = true;
+					$scope.add = true;
+					console.log(resp);
 		        	$scope.alerts = [(
-	                    { type: 'success', msg: "Show Added!" }
+	                    { type: 'success', msg: "Show added!" }
 	                )];
 		        },
 		        function(err){

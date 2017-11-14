@@ -1,5 +1,5 @@
 angular.module('watchHoursApp')
-.controller('SearchCtrl', ['$scope', 'Shows', 'filterFilter', 'HomeServices', function($scope, Shows, filterFilter, HomeServices){
+.controller('SearchCtrl', ['$rootScope', '$scope', 'Shows', 'filterFilter', 'HomeServices', function($rootScope, $scope, Shows, filterFilter, HomeServices){
 
         $scope.alphabet = ['0-9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
             'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
@@ -16,6 +16,8 @@ angular.module('watchHoursApp')
         $scope.totalItems = 0;
         $scope.entryLimit = 12; // items per page
         $scope.currentPage = 1;
+
+        $rootScope.back = '';
 
         /**
          * Reset filters for search
