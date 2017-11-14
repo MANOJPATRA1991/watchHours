@@ -15,7 +15,7 @@ angular.module('watchHoursApp')
 
         $rootScope.$on('$stateChangeStart', function (ev, to, toParams, from, fromParams) {
             $rootScope.back = from;
-         });
+        });
 
         Array.prototype.contains = function(v) {
             for(var i = 0; i < this.length; i++) {

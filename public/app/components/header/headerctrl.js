@@ -12,7 +12,6 @@ angular.module('watchHoursApp')
             // Sort shows by rating
             $scope.shows = resp.sort(HomeServices.compare);
         });
-
         /**
          * Reset the search filter
          */

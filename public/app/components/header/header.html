@@ -20,7 +20,8 @@
   </div>
 </nav>
 
-<ul ng-if="!state.is('app')" class="breadcrumb">
+<ul ng-hide="state.is('app') || state.includes('app.showsThisWeek')
+|| state.includes('app.showsToday') || state.includes('app.showsTomorrow')" class="breadcrumb">
     <li><a href="#!/{{back}}">Back </a></li>
 </ul>
 
