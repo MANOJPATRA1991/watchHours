@@ -71,9 +71,13 @@ agenda.on('complete', function(job) {
   console.log("Job %s finished", job.attrs.name);
 });
 
+// Start agenda task after 5 seconds
+setTimeout(function() {
+    agenda.start();
+}, 5000);
+
 showRouter.route('/')
     .get(function(req, res, next){
-        agenda.start();
         // save a reference to all the docs in Show database
         var query = Show.find();
         var show = [];
