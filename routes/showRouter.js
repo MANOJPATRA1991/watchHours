@@ -20,38 +20,48 @@ var Sugar = require('sugar');
 var nodemailer = require('nodemailer');
 
 agenda.define('send email show alert', function(job, done) {
-  Show.findOne({ name: job.attrs.data }).populate('subscribers').exec(function(err, show) {
-    var emails = show.subscribers.map(function(user) {
-        return user.email;
+    Show.findOne({ seriesName: job.attrs.data }).populate('subscribers').exec(function(err, show) {
+        console.log(show);
+        var emails = show.subscribers.map(function(user) {
+            console.log(emails);
+            return user.email;
+        });
+        var episodes = [];
+        Episode.find().where({seriesId: show._id}).sort({airedEpisodeNumber:1, airedSeason:1}).exec(function(err, eps) {
+            eps.forEach(function(episode) {
+                if(episode !== undefined && new Date(episode.firstAired) > new Date()) {
+                    console.log(episode);
+                    episodes.push(episode);
+                }
+            }, this);
+
+            var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: { user: 'patra.manoj0@gmail.com', pass: 'zwszdvovwxlxvukd' }
+            });
+    
+            var mailOptions = {
+            from: 'Manoj Patra 👻 <patra.manoj0@gmail.com>',
+            to: emails.join(','),
+            subject: 'Tune in your TV! ' + show.seriesName + ' will air soon!',
+            html: '<h1>' + show.seriesName + ' starts in 2 hours on ' + show.network + '</h1>' +
+                '<h3>' + 'Episode ' + episodes[0].airedEpisodeNumber + ' Overview</h3>' + 
+                '<h4>' + episodes[0].overview + '</h4>' + '<h4>Click <a href="https://watch-hours.herokuapp.com/#!/series/' + episodes[0].seriesId + 
+                '/episodes?season=' + episodes[0].airedSeason + '">here</a> for more.</h4>'
+            };
+    
+            transporter.sendMail(mailOptions, function(error, response) {
+                if(error){
+                    console.log("Internal server error");
+                    return;
+                }
+                console.log('Message sent: ' + response.message);
+                done();
+            });
+        });
     });
-    var episodes = Episode.find().where({seriesId: show._id}).sort('airedSeason airedEpisodeNumber'); 
-
-    var upcomingEpisode = episodes.filter(function(episode) {
-      return new Date(episode.firstAired) > new Date();
-    })[0];
-
-    var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user: 'patra.manoj0@gmail.com', pass: 'zwszdvovwxlxvukd' }
-    });
-
-    var mailOptions = {
-      from: 'Manoj Patra 👻 <patra.manoj0@gmail.com>',
-      to: emails.join(','),
-      subject: show.seriesName + ' will air in few seconds!',
-      text: show.seriesName + ' starts in less than a minute on ' + show.network + '.\n\n' +
-      'Episode ' + upcomingEpisode.airedEpisodeNumber + ' Overview\n\n' + upcomingEpisode.overview
-    };
-
-    transporter.sendMail(mailOptions, function(error, response) {
-        if(error){
-            next(error);
-          }
-        console.log('Message sent: ' + response.message);
-        done();
-    });
-  });
 });
+
 
 agenda.on('start', function(job) {
   console.log("Job %s starting", job.attrs.name);
@@ -63,6 +73,7 @@ agenda.on('complete', function(job) {
 
 showRouter.route('/')
     .get(function(req, res, next){
+        agenda.start();
         // save a reference to all the docs in Show database
         var query = Show.find();
         var show = [];
@@ -141,7 +152,8 @@ showRouter.route('/')
                             next(err);
                         }
                         var alertDate = Sugar.Date.create('Next ' + newShow.airsDayOfWeek + ' at ' + newShow.airsTime);
-                        agenda.start();
+                        alertDate.setHours(alertDate.getHours() - 2);
+                        console.log(alertDate);
                         agenda.schedule(alertDate, 'send email show alert', newShow.seriesName).repeatEvery('1 week');
                         console.log('Show created!');
                         var id = newShow._id;

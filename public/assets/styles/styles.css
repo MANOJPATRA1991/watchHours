@@ -6,6 +6,10 @@ html,body
   word-spacing: 3px;
 }
 
+a {
+  cursor: pointer !important;
+}
+
 .breadcrumb {
   margin-bottom: 0 !important;
   background: #dadada;

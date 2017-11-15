@@ -103,15 +103,16 @@ function($scope, $sce, $state, $stateParams, $rootScope, Series,
                         if(resp.data === true){
                             $scope.isSubscribed = false;
                         }
+                        $state.go("app.series",{},{reload: "app.series"});
                     });
                 }else{
                     Subscription.subscriptions(show, $rootScope.uid).then(function(resp) {
                         if(resp.data === true){
                             $scope.isSubscribed = true;
                         }
+                        $state.go("app.series",{},{reload: "app.series"});
                     });
                 }
-                $state.go("app.series",{},{reload: "app.series"});
             };
 
             /**
@@ -123,15 +124,16 @@ function($scope, $sce, $state, $stateParams, $rootScope, Series,
                         if(resp.data === true){
                             $scope.isInWatchlist = false;
                         }
+                        $state.go("app.series",{},{reload: "app.series"});
                     });
                 }else{
                     Subscription.watchlist(show, $rootScope.uid).then(function(resp) {
                         if(resp.data === true){
                             $scope.isInWatchlist = true;
                         }
+                        $state.go("app.series",{},{reload: "app.series"});
                     });
                 }
-                $state.go("app.series",{},{reload: "app.series"});
             };
 
             /**
@@ -143,15 +145,16 @@ function($scope, $sce, $state, $stateParams, $rootScope, Series,
                         if(resp.data === true){
                             $scope.isInFavorites = false;
                         }
+                        $state.go("app.series",{},{reload: "app.series"});
                     });
                 }else{
                     Subscription.favorites(show, $rootScope.uid).then(function(resp) {
                         if(resp.data === true){
                             $scope.isInFavorites = true;
                         }
+                        $state.go("app.series",{},{reload: "app.series"});
                     });
                 }
-                $state.go("app.series",{},{reload: "app.series"});
             };
         });
         
